@@ -1,0 +1,17 @@
+Package: fdANOVA
+Type: Package
+Title: Analysis of Variance for Univariate and Multivariate Functional
+        Data
+Version: 0.1.0
+Author: Tomasz Gorecki, Lukasz Smaga
+Maintainer: Lukasz Smaga <ls@amu.edu.pl>
+Description: Performs analysis of variance testing procedures for univariate and multivariate functional data (Cuesta-Albertos and Febrero-Bande (2010) <doi:10.1007/s11749-010-0185-3>, Gorecki and Smaga (2015) <doi:10.1007/s00180-015-0555-0>, Gorecki and Smaga (2017) <doi:10.1080/02664763.2016.1247791>, Zhang et al. (2016) <arXiv:1309.7376v1>).
+License: LGPL-2 | LGPL-3 | GPL-2 | GPL-3
+Depends: R (>= 2.10)
+Imports: fda, doParallel, ggplot2, doBy, MASS, magic, parallel, foreach
+Encoding: UTF-8
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2017-09-08 09:54:43 UTC; ls
+Repository: CRAN
+Date/Publication: 2017-09-08 10:37:46 UTC

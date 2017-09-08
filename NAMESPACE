@@ -1,0 +1,23 @@
+exportPattern("^[[:alpha:]]+")
+
+S3method(plot, fanovatests)
+S3method(plot, fmanovatrp)
+S3method(print, fanovatests)
+S3method(print, fmanovaptbfr)
+S3method(print, fmanovatrp)
+S3method(summary, fanovatests)
+S3method(summary, fmanovaptbfr)
+S3method(summary, fmanovatrp)
+
+import(fda)
+import(ggplot2)
+import(doBy)
+import(MASS)
+import(magic)
+import(doParallel)
+import(parallel)
+import(foreach)
+
+importFrom("stats", "cov", "manova", "pchisq", "pf", "predict",
+           "rnorm", "runif", "smooth.spline", "var")
+importFrom("utils", "installed.packages", "stack")
