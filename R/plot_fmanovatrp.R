@@ -13,7 +13,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
       da = data.frame(pvalues = pvalues, k = rep(x$k, 4),
                       test = rep(c("Wp", "LHp", "Pp", "Rp"), each = length(x$k)))
       figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                              geom = c("line", "point"), ylab = "p-values") +
+                              geom = c("line", "point"), ylab = "p-value") +
         ggplot2::scale_shape_manual(values = c(1, 3, 5, 7)) +
         ggplot2::scale_color_manual(values = c(1, 3, 7, 6)) +
         ggplot2::labs(title = "FMANOVA - Tests based on k Random Projections (without permutation)")
@@ -23,7 +23,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
       da = data.frame(pvalues = pvalues, k = rep(x$k, 3),
                       test = rep(c("Wp", "LHp", "Pp"), each = length(x$k)))
       figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                              geom = c("line", "point"), ylab = "p-values") +
+                              geom = c("line", "point"), ylab = "p-value") +
         ggplot2::scale_shape_manual(values = c(1, 3, 7)) +
         ggplot2::scale_color_manual(values = c(1, 3, 6)) +
         ggplot2::labs(title = "FMANOVA - Tests based on k Random Projections (without permutation)")
@@ -36,7 +36,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
       da = data.frame(pvalues = pvalues, k = rep(y$k, 4),
                       test = rep(c("Wpp", "LHpp", "Ppp", "Rpp"), each = length(y$k)))
       figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                              geom = c("line", "point"), ylab = "p-values") +
+                              geom = c("line", "point"), ylab = "p-value") +
         ggplot2::scale_shape_manual(values = c(2, 4, 6, 8)) +
         ggplot2::scale_color_manual(values = c(2, 4, 5, 8)) +
         ggplot2::labs(title = "FMANOVA - Tests based on k Random Projections (using permutations)")
@@ -49,7 +49,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
         da = data.frame(pvalues = c(pvalues.stand, pvalues.perm), k = rep(x$k, 8),
                         test = rep(c("Wp", "LHp", "Pp", "Rp", "Wpp", "LHpp", "Ppp", "Rpp"), each = length(x$k)))
         figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                                geom = c("line", "point"), ylab = "p-values") +
+                                geom = c("line", "point"), ylab = "p-value") +
           ggplot2::scale_shape_manual(values = 1:8) +
           ggplot2::scale_color_manual(values = c(1:4, 7, 5, 6, 8)) +
           ggplot2::labs(title = "FMANOVA - Tests based on k Random Projections")
@@ -60,7 +60,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
         da = data.frame(pvalues = c(pvalues.stand, pvalues.perm), k = rep(x$k, 7),
                         test = rep(c("Wp", "LHp", "Pp", "Wpp", "LHpp", "Ppp", "Rpp"), each = length(x$k)))
         figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                                geom = c("line", "point"), ylab = "p-values") +
+                                geom = c("line", "point"), ylab = "p-value") +
           ggplot2::scale_shape_manual(values = c(1:4, 6:8)) +
           ggplot2::scale_color_manual(values = c(1:4, 5, 6, 8)) +
           ggplot2::labs(title = "FMANOVA - Tests based on k Random Projections")

@@ -26,7 +26,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
     SSE = SST - SSA
     return((n-a)*SSA/SSE/(a-1))
   }
-
+  
   ATS.simple = function(x, group.label){
     N = length(x); n = table(group.label); ng = length(as.vector(n))
     means = matrix(tapply(x, group.label, mean), ncol = 1)
@@ -39,7 +39,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
     f0 = sum(diag(MM %*% SN))^2/sum(diag(DM %*% DM %*% SN %*% SN %*% Delta))
     return(c(test.stat, 1 - pf(test.stat, f1, f0)))
   }
-
+  
   WTPSp = function(x, group.label, group.label0, n, n.i, l, perm.WTPS, nrTRP){
     means = matrix(0, nrow = l, ncol = 1); variances = numeric(l)
     for(i in 1:l){
@@ -199,7 +199,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           if(method == "mean"){ if(floor(mean(KK)) %% 2 == 1){ K = floor(mean(KK)) }else{ K = floor(mean(KK))-1 } }
         }
       }else{ K = maxK }
-
+      
       if(is.null(params$paramFP$int)){
         fbasis = fda::create.fourier.basis(c(0, p), K)
         lfdata = vector("list", l)
@@ -218,7 +218,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           mfdata[, group.label == group.label0[i]] = lfdata[[i]]
         }
       }
-
+      
       a = 0; b = 0; c = 0
       for(i in 1:l){
         a = a + sum(t(lfdata[[i]]) %*% lfdata[[i]])/n.i[i]
@@ -348,7 +348,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           if(method == "mean"){ K = floor(mean(KK)) }
         }
       }else{ K = maxK }
-
+      
       if(is.null(params$paramFP$int)){
         fbasis = fda::create.bspline.basis(c(0, p), K, norder = norder)
         lfdata = vector("list", l)
@@ -367,7 +367,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           mfdata[, group.label == group.label0[i]] = lfdata[[i]]
         }
       }
-
+      
       bspline.cross.prod.matrix = fda::inprod(fbasis, fbasis)
       a = 0; b = 0; c = 0
       for(i in 1:l){
@@ -409,11 +409,11 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
       if(n != length(group.label)){ stop("the number of observations is not equal to the number of elements in vector of labels") }
       lfdata = vector("list", l)
       for(i in 1:l){ lfdata[[i]] = mfdata[, group.label == group.label0[i]] }
-
+      
       own.cross.prod.mat = params$paramFP$own.cross.prod.mat
       if(K != nrow(own.cross.prod.mat)){ stop("invalid argument params$paramFP$own.cross.prod.mat") }
       if(K != ncol(own.cross.prod.mat)){ stop("invalid argument params$paramFP$own.cross.prod.mat") }
-
+      
       a = 0; b = 0; c = 0
       for(i in 1:l){
         a = a + sum(t(lfdata[[i]]) %*% own.cross.prod.mat %*% lfdata[[i]])/n.i[i]
@@ -604,7 +604,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
     A2N = A^2; B2N = B
     A2B = (n-l)*(n-l+1)/(n-l-1)/(n-l+2)*(A^2-2*B/(n-l+1))
     B2B = (n-l)^2/(n-l-1)/(n-l+2)*(B-A^2/(n-l))
-
+    
     if(any(c("L2N", "L2B", "L2b") %in% test)){
       statL2 = sum(SSR)
       if("L2N" %in% test){
@@ -884,7 +884,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           ATS.simple.p = numeric(ik)
           WTPS.p = numeric(ik)
           for(j in 1:ik){
-            bm.p = cumsum(c(mean(x[1,]), rnorm(p-1, mean = 0, sd = 1)))/sqrt(p)
+            bm.p = cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
             bm.p = bm.p/modulo(bm.p)
             ik.data.proj[, j] = t(x) %*% as.matrix(bm.p)
             data.proj = ik.data.proj[, j]
@@ -918,7 +918,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
         if(parallel.method == "parallel.method1"){
           rs = foreach(j = 1:ik, .combine = rbind) %dopar%
           {
-            bm.p = cumsum(c(mean(x[1,]), rnorm(p-1, mean = 0, sd = 1)))/sqrt(p)
+            bm.p = cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
             bm.p = bm.p/modulo(bm.p)
             ik.data.proj[, j] = t(x) %*% as.matrix(bm.p)
             data.proj = ik.data.proj[, j]
@@ -966,7 +966,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
       parallel::stopCluster(cl)
     }
   }
-
+  
   list.results = list()
   for(ii in test){
     if(ii == "FP"){

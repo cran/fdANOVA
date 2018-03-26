@@ -11,7 +11,7 @@ plot.fanovatests = function(x, y, ...){
     da = data.frame(pvalues = pvalues, k = rep(x$TRP$k, 3),
                     test = rep(c("ANOVA", "ATS", "WTPS"), each = length(x$TRP$k)))
     figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                            geom = c("line", "point"), ylab = "p-values") +
+                            geom = c("line", "point"), ylab = "p-value") +
       ggplot2::scale_shape_manual(values = c(1, 3, 5)) +
       ggplot2::scale_color_manual(values = c(1, 3, 6)) +
       ggplot2::labs(title = "FANOVA - Tests based on k Random Projections (ANOVA and ATS without permutation)")
@@ -23,7 +23,7 @@ plot.fanovatests = function(x, y, ...){
       da = data.frame(pvalues = pvalues, k = rep(y$TRP$k, 3),
                       test = rep(c("ANOVAp", "ATSp", "WTPS"), each = length(y$TRP$k)))
       figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                              geom = c("line", "point"), ylab = "p-values") +
+                              geom = c("line", "point"), ylab = "p-value") +
         ggplot2::scale_shape_manual(values = c(2, 4, 5)) +
         ggplot2::scale_color_manual(values = c(2, 4, 6)) +
         ggplot2::labs(title = "FANOVA - Tests based on k Random Projections (using permutations)")
@@ -36,7 +36,7 @@ plot.fanovatests = function(x, y, ...){
       da = data.frame(pvalues = c(pvalues.stand, pvalues.perm), k = rep(x$TRP$k, 5),
                       test = rep(c("ANOVA", "ATS", "WTPS", "ANOVAp", "ATSp"), each = length(x$TRP$k)))
       figure = ggplot2::qplot(k, pvalues, data = da, group = test, colour = test, shape = test,
-                              geom = c("line", "point"), ylab = "p-values") +
+                              geom = c("line", "point"), ylab = "p-value") +
         ggplot2::scale_shape_manual(values = 1:5) +
         ggplot2::scale_color_manual(values = c(1, 2, 3, 4, 6)) +
         ggplot2::labs(title = "FANOVA - Tests based on k Random Projections")

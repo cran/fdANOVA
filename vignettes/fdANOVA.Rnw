@@ -10,9 +10,7 @@
   \Shorttitle{\pkg{fdANOVA}: Analysis of Variance for Functional Data in \proglang{R}}
 
   \Abstract{
-This introduction to the \proglang{R}~package \pkg{fdANOVA} is a (slightly) modified version of G\'orecki T and Smaga \L$\ $(2017). ``\pkg{fdANOVA}: An \proglang{R}~Software Package for  Analysis of Variance for Univariate and Multivariate Functional Data.'' (under review).
-
-Functional data, i.e., observations represented by curves or functions, frequently arise in various fields. The theory and practice of statistical methods for such data is referred to as functional data analysis (FDA) which is one of major research fields in statistics. The practical use of FDA methods is made possible thanks to availability of specialized and usually free software. In particular, a number of \proglang{R}~packages is devoted to these methods. In the paper, we introduce a new \proglang{R}~package \pkg{fdANOVA} which provides an access to a broad range of global analysis of variance methods for univariate and multivariate functional data. The implemented testing procedures are briefly overviewed and illustrated by examples on a well known functional data set. To reduce the computation time, parallel implementation is developed and its efficiency is empirically evaluated. Since some of the implemented tests have not been compared in terms of size control and power yet, appropriate simulations are also conducted. Their results can help in choosing proper testing procedures in practice.
+Functional data, i.e., observations represented by curves or functions, frequently arise in various fields. The theory and practice of statistical methods for such data is referred to as functional data analysis (FDA) which is one of major research fields in statistics. The practical use of FDA methods is made possible thanks to availability of specialized and usually free software. In particular, a number of \proglang{R}~packages is devoted to these methods. In the vignette, we introduce a new \proglang{R}~package \pkg{fdANOVA} which provides an access to a broad range of global analysis of variance methods for univariate and multivariate functional data. The implemented testing procedures are briefly overviewed and illustrated by examples on a well known functional data set. To reduce the computation time, parallel implementation is developed.
 }
   \Keywords{analysis of variance, functional data, \pkg{fdANOVA}, \proglang{R}}
   \Plainkeywords{analysis of variance, functional data, fdANOVA, R} %% without formatting
@@ -47,13 +45,13 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 \section[Introduction]{Introduction}
 \label{sec1}
 In recent years considerable attention has been devoted to analysis of so called functional data. The functional data are represented by functions or curves which are observations of a random variable (or random variables) taken over a continuous interval or in large discretization of it. Sets of functional observations are peculiar examples of the high-dimensional data where the number of variables significantly exceeds the number of observations. Such data are often gathered automatically due to advances in modern technology, including computing environments. The functional data are naturally collected in agricultural sciences, behavioral sciences, chemometrics, economics, medicine, meteorology, spectroscopy, and many others. The main purpose of functional data analysis (FDA) is to provide tools for statistically describing and modelling sets of functions or curves. The monographs by \cite{RamsaySilverman2005}, \cite{FerratyVieu2006}, \cite{HorvathKokoszka2012} and \cite{Zhang2013} present a broad perspective of the FDA solutions. The following problems for functional data are commonly studied \citep[see also the review papers of][]{Cuevas2014,Wangetal2016}: analysis of variance \citep{Faraway1997, CFF2004, ShenFaraway2004, ZhangChen2007, CAFB2010, Zhang2011, Zhang2013,
-ZhangLiang2014, GoreckiSmaga2015, Zhangetal2016}, canonical correlation analysis \citep{KW2013, KeserKocakoc2015}, classification \citep{JamesHastie2001, DelaigleHall2012, DelaigleHall2013, Changetal2014}, cluster analysis \citep{Giacofcietal2013, Coffeyetal2014, YamamotoTerada2014}, outlier detection \citep{FBetal2008}, principal component analysis \citep{Boenteetal2014, Fremdtetal2014}, regression analysis \citep{Chenetal2011, Hilgertetal2013, Morris2015, Robbianoetal2015, Pengetal2016}, repeated measures analysis \citep{MCC2011,Smaga2017}, simultaneous confidence bands \citep{Degras2011, Caoetal2012, Maetal2012}. The above references concern the univariate functional data. However, some methods have their multivariate counterparts, e.g., analysis of variance \citep{GoreckiSmaga2017}, canonical correlation analysis \citep{Goreckietal2016a}, classification \citep{Goreckietal2015, Goreckietal2016a,Goreckietal2016b}, cluster analysis \citep{Tokushigeetal2007, JacquesPreda2014,ParkAhn2016}, linear regression and prediction \citep{Chiouetal2016,KrzyskoSmaga2017}, principal component analysis \citep{Berrenderoetal2011, Chiouetal2014}, statistical modelling \citep{ChiouMuller2014}. Some examples of applications of functional data analysis can be found in  \cite{Ogdenetal2002}, \cite{Pfeifferetal2002}, \cite{Rossietal2002}, \cite{JankShmueli2006}, \cite{FBetal2008}, \cite{Bobelynetal2010},  \cite{TarrioSaavedraetal2011} and \cite{Longetal2012}.
+ZhangLiang2014, GoreckiSmaga2015, Zhangetal2013}, canonical correlation analysis \citep{KW2013, KeserKocakoc2015}, classification \citep{JamesHastie2001, DelaigleHall2012, DelaigleHall2013, Changetal2014}, cluster analysis \citep{Giacofcietal2013, Coffeyetal2014, YamamotoTerada2014}, outlier detection \citep{FBetal2008}, principal component analysis \citep{Boenteetal2014, Fremdtetal2014}, regression analysis \citep{Chenetal2011, Hilgertetal2013, Morris2015, Robbianoetal2015, Pengetal2016}, repeated measures analysis \citep{MCC2011,Smaga2017}, simultaneous confidence bands \citep{Degras2011, Caoetal2012, Maetal2012}. The above references concern the univariate functional data. However, some methods have their multivariate counterparts, e.g., analysis of variance \citep{GoreckiSmaga2017}, canonical correlation analysis \citep{Goreckietal2016a}, classification \citep{Goreckietal2015, Goreckietal2016a,Goreckietal2016b}, cluster analysis \citep{Tokushigeetal2007, JacquesPreda2014,ParkAhn2016}, linear regression and prediction \citep{Chiouetal2016,KrzyskoSmaga2017}, principal component analysis \citep{Berrenderoetal2011, Chiouetal2014}, statistical modelling \citep{ChiouMuller2014}. Some examples of applications of functional data analysis can be found in  \cite{Ogdenetal2002}, \cite{Pfeifferetal2002}, \cite{Rossietal2002}, \cite{JankShmueli2006}, \cite{FBetal2008}, \cite{Bobelynetal2010},  \cite{TarrioSaavedraetal2011} and \cite{Longetal2012}.
 
 Many methods for functional data analysis have been already implemented in the \proglang{R}~software \citep{RCoreTeam2017}. The packages \pkg{fda} \citep{Ramsayetal2009,Ramsayetal2014} and \pkg{fda.usc} \citep{FBOF2012} are the biggest and probably the most commonly used ones. The first package includes the techniques for functional data in the Hilbert space $L_2(I)$ of square integrable functions over an interval $I=[a,b]$. On the other hand, in the second one, many of the methods implemented do not need such assumption and use only the values of functions evaluated on a grid of discretization points (also non-equally spaced). There is also a broad range of \proglang{R}~packages containing solutions for more particular functional data problems: Widely used principal components analysis for functional data implemented in the packages \pkg{fda} and \pkg{fda.usc} is also available in \pkg{fdapace} \citep{Daietal2016}, \pkg{fpca} \citep{PengPaul2011}, \pkg{fdasrvf} \citep{fdasrvf2017} and \pkg{MFPCA} \citep{MFPCA2017, HappGreven2016} ones. For classification and cluster analysis, the packages \pkg{classiFunc} \citep{classiFunc2017}, \pkg{fdakma} \citep{Parodietal2015}, \pkg{Funclustering} \citep{Soueidatt2014}, \pkg{funcy} \citep{Yassouridis2016} and \pkg{GPFDA} \citep{GPFDA2014} can be used. In the packages \pkg{fdaPDE} \citep{Lilaetal2016}, \pkg{FDboost} \citep{Brockhausetal2015, BrockhausRugamer2016}, \pkg{flars} \citep{flars2016}, \pkg{funreg} \citep{DziakShiyko2016} and \pkg{refund} \citep{Goldsmithetal2016}, a lot of work was done to develop the regression analysis for functional data. The packages \pkg{freqdom} \citep{freqdom2015}, \pkg{ftsa} \citep{Shang2013, HyndmanShang2016}, \pkg{ftsspec} \citep{Tavakoli2015} and  \pkg{pcdpca} \citep{Kidzinskietal2016} provide implementation of various methods of functional time series analysis. Methods for the robust analysis of univariate and multivariate functional data are provided in the \pkg{roahd} package \citep{roahd2017}. Interval testing procedures for functional data in different frameworks (i.e., one or two-population frameworks, functional linear models) are implemented in the \pkg{fdatest} package \citep{fdatest2015}. The functional data analysis in mixed model framework is implemented in the package \pkg{fdaMixed} \citep{Markussen2014}. The functional observations can be visualized by many of plots implemented in the following packages \pkg{GOplot} \citep{Walteretal2015}, \pkg{rainbow} \citep{ShangHyndman2016} and \pkg{refund.shiny} \citep{WrobelGoldsmith2016}. The packages \pkg{fds} \citep{ShangHyndman2013} and \pkg{mfds} \citep{GoreckiSmaga2017mfds} contain some interesting functional data sets.
 
-Despite so many \proglang{R}~packages for functional data analysis, a broad range of test for a widely applicable analysis of variance problem for functional data was implemented very recently in the package \pkg{fdANOVA}. Earlier, only the testing procedures of \cite{CFF2004} and \cite{CAFB2010} were available in the package \pkg{fda.usc}. The package \pkg{fdANOVA} is available from the Comprehensive \proglang{R}~Archive Network at \url{http://CRAN.R-project.org/package=fdANOVA}. It is the aim of this package to provide a few functions implementing most of known analysis of variance tests for univariate and multivariate functional data. Most of them are based on bootstrap, permutations or projections, which may be time-consuming. For this reason, the package also contains parallel implementations which enable to reduce the computation time significantly, which is shown in empirical evaluation. Additionally, in this paper, some tests or their implementation versions are compared in terms of size control and power by simulation studies. Those comparisons were not presented anywhere else.
+Despite so many \proglang{R}~packages for functional data analysis, a broad range of test for a widely applicable analysis of variance problem for functional data was implemented very recently in the package \pkg{fdANOVA}. Earlier, only the testing procedures of \cite{CFF2004} and \cite{CAFB2010} were available in the package \pkg{fda.usc}. The package \pkg{fdANOVA} is available from the Comprehensive \proglang{R}~Archive Network at \url{http://CRAN.R-project.org/package=fdANOVA}. It is the aim of this package to provide a few functions implementing most of known analysis of variance tests for univariate and multivariate functional data. Most of them are based on bootstrap, permutations or projections, which may be time-consuming. For this reason, the package also contains parallel implementations which enable to reduce the computation time significantly, which is shown in empirical evaluation.
 
-The rest of the paper is organized in the following manner. In Section~\ref{sec2}, the problems of the analysis of variance for univariate and multivariate functional data are introduced. A review of most of the known solutions of these problems is also presented there. Some of the testing procedures are slightly generalized. Since it was not easy task to implement many different tests in a few functions, their usage may also be not easy at first. Thus, Section~\ref{sec3} contains a detailed description of (eventual) preparation of data and package functionality as well as a package demonstration on commonly used real data set. A series of experiments evaluating efficiency of parallel implementation is presented in Section~\ref{sec4}. Simulation studies comparing some of the implemented tests in terms of size control and power are depicted in Section~\ref{sec5}. Finally, Section~\ref{sec6} concludes the paper and notes on future extensions of the \pkg{fdANOVA} package.
+The rest of the vignette is organized in the following manner. In Section~\ref{sec2}, the problems of the analysis of variance for univariate and multivariate functional data are introduced. A review of most of the known solutions of these problems is also presented there. Some of the testing procedures are slightly generalized. Since it was not easy task to implement many different tests in a few functions, their usage may also be not easy at first. Thus, Section~\ref{sec3} contains a detailed description of (eventual) preparation of data and package functionality as well as a package demonstration on commonly used real data set.
 
 \section{Analysis of variance for functional data}
 \label{sec2}
@@ -86,16 +84,16 @@ Tests of this type were considered by \cite{ShenFaraway2004} and \cite{Zhang2011
 The following testing procedure, which also uses the test statistic (\ref{Fstat}), is the slightly modified procedure proposed by \cite{GoreckiSmaga2015}. Assume that $X_{ij}\in L_2(I)$, $i=1,\dots,l,j=1,\dots,n_i$, where  $L_2(I)$ is a Hilbert space consisting of square integrable functions on $I$, equipped with the inner product of the form $\langle f,g\rangle=\int_{I}f(t)g(t)dt$. We represent the functional observations by a finite number of basis functions $\varphi_m\in L_2(I),m=1,\dots$, i.e.,
 \begin{equation}
 \label{Xbfr}
-X_{ij}(t)=\sum_{m=1}^{K}c_{ijm}\varphi_m(t),\quad t\in I,
+X_{ij}(t)\approx\sum_{m=1}^{K}c_{ijm}\varphi_m(t),\quad t\in I,
 \end{equation}
-where $c_{ijm}$, $m=1,\dots,K$, are random variables such that $\mathrm{Var}(c_{ijm})<\infty$ and $K$ is sufficiently large \citep[see][for more details about basis function representation]{RamsaySilverman2005}. By the results of \cite{Goreckietal2015}, the commonly used least squares method \citep[see, for example,][]{KW2013} seems to be one of the best for estimation of coefficients $c_{ijm}$, so we use only that method for this purpose. The value of $K$ can be selected for each observation $X_{ij}(t)$ using certain information criterion, e.g., BIC, eBIC, AIC or AICc. From the values of $K$ corresponding to all observations a modal, minimum, maximum or mean value is selected as the common value for all processes $X_{ij}(t)$. By using (\ref{Xbfr}) and easy modifications of the results obtained by \cite{GoreckiSmaga2015}, we proved that the test statistic (\ref{Fstat}) is equal to
+where $c_{ijm}$, $m=1,\dots,K$, are random variables such that $\mathrm{Var}(c_{ijm})<\infty$ and $K$ is sufficiently large \citep[see][for more details about basis function representation]{RamsaySilverman2005}. By the results of \cite{Goreckietal2015}, the commonly used least squares method \citep[see, for example,][]{KW2013} seems to be one of the best for estimation of coefficients $c_{ijm}$, so we use only that method for this purpose. The value of $K$ can be selected for each observation $X_{ij}(t)$ using certain information criterion, e.g., BIC, eBIC, AIC or AICc. From the values of $K$ corresponding to all observations a modal, minimum, maximum or mean value is selected as the common value for all processes $X_{ij}(t)$. By using (\ref{Xbfr}) and easy modifications of the results obtained by \cite{GoreckiSmaga2015}, we proved that the test statistic (\ref{Fstat}) is approximately equal to
 \begin{equation}
 \label{FGS}
 \frac{(a-b)/(l-1)}{(c-a)/(n-l)},
 \end{equation}
-where $$a=\sum_{i=1}^l\frac{1}{n_i}\mathbf{1}_{n_{i}}^{\top}\mathbf{C}_{i}^{\top}\mathbf{J}_{\vect{\varphi}}\mathbf{C}_{i}\mathbf{1}_{n_{i}},\ b=\frac{1}{n}\sum_{i=1}^l\sum_{j=1}^l\mathbf{1}_{n_{i}}^{\top}\mathbf{C}_{i}^{\top}\mathbf{J}_{\vect{\varphi}}\mathbf{C}_{j}\mathbf{1}_{n_{j}},\ c=\sum_{i=1}^l\mathrm{trace}(\mathbf{C}_i^{\top}\mathbf{J}_{\vect{\varphi}}\mathbf{C}_i),$$ $\mathbf{1}_a$ is the $a\times 1$ vector of ones, $\mathbf{C}_i=(c_{ijm})_{j=1,\dots,n_i;m=1,\dots,K}$ are $K\times n_i$ matrices of coefficients, $i=1,\dots,l$, and $\mathbf{J}_{\vect{\varphi}}:=\int_I\vect{\varphi}(t)\vect{\varphi}^{\top}(t)dt$ is the $K\times K$ cross product matrix corresponding to the vector $\vect{\varphi}(t)=(\varphi_1(t),\dots,\varphi_K(t))^{\top}$. So the statistic (\ref{Fstat}) can be calculated based only on the coefficients $c_{ijm}$ and the matrix $\mathbf{J}_{\vect{\varphi}}$, which can be approximated by using the function \code{inprod} from the \proglang{R}~package \pkg{fda} \citep{Ramsayetal2009,Ramsayetal2014} (For orthonormal basis, $\mathbf{J}_{\vect{\varphi}}$ is the identity matrix.). Moreover, observe that any permutation of the observations leaves the values of the sums $b$ and $c$ unchanged. For this reason, \cite{GoreckiSmaga2015} considered the permutation test based on (\ref{FGS}). We refer to this test as the FP test. Simulation studies of \cite{GoreckiSmaga2015} suggest that the FP test has better finite sample properties than the $F$-type and $L^2$-norm-based tests. Moreover, for short functional data (i.e., observed on a short grid of design time points) it may also be better than the GPF test described in the following paragraph.
+where $$a=\sum_{i=1}^l\frac{1}{n_i}\mathbf{1}_{n_{i}}^{\top}\mathbf{C}_{i}^{\top}\mathbf{J}_{\vect{\varphi}}\mathbf{C}_{i}\mathbf{1}_{n_{i}},\ b=\frac{1}{n}\sum_{i=1}^l\sum_{j=1}^l\mathbf{1}_{n_{i}}^{\top}\mathbf{C}_{i}^{\top}\mathbf{J}_{\vect{\varphi}}\mathbf{C}_{j}\mathbf{1}_{n_{j}},\ c=\sum_{i=1}^l\mathrm{trace}(\mathbf{C}_i^{\top}\mathbf{J}_{\vect{\varphi}}\mathbf{C}_i),$$ $\mathbf{1}_a$ is the $a\times 1$ vector of ones, $\mathbf{C}_i=(c_{ijm})_{j=1,\dots,n_i;m=1,\dots,K}$ are $K\times n_i$ matrices of coefficients, $i=1,\dots,l$, and $\mathbf{J}_{\vect{\varphi}}:=\int_I\vect{\varphi}(t)\vect{\varphi}^{\top}(t)dt$ is the $K\times K$ cross product matrix corresponding to the vector $\vect{\varphi}(t)=(\varphi_1(t),\dots,\varphi_K(t))^{\top}$. So the statistic (\ref{Fstat}) can be calculated based only on the coefficients $c_{ijm}$ and the matrix $\mathbf{J}_{\vect{\varphi}}$, which can be approximated by using the function \code{inprod()} from the \proglang{R}~package \pkg{fda} \citep{Ramsayetal2009,Ramsayetal2014} (For orthonormal basis, $\mathbf{J}_{\vect{\varphi}}$ is the identity matrix.). Moreover, observe that any permutation of the observations leaves the values of the sums $b$ and $c$ unchanged. For this reason, \cite{GoreckiSmaga2015} considered the permutation test based on (\ref{FGS}). We refer to this test as the FP test. Simulation studies of \cite{GoreckiSmaga2015} suggest that the FP test has better finite sample properties than the $F$-type and $L^2$-norm-based tests. Moreover, for short functional data (i.e., observed on a short grid of design time points) it may also be better than the GPF test described in the following paragraph.
 
-In the above test statistics, $\mathrm{SSR}_n(t)$ and $\mathrm{SSE}_n(t)$ were integrated separately. However, by the simulation results of \cite{GoreckiSmaga2015}, it follows that for example integrating the whole quotient $\mathrm{SSR}_n(t)/\mathrm{SSE}_n(t)$ is more powerful in many situations. Such test statistic of the form $\int_I F_n(t)dt$ was considered by \cite{ZhangLiang2014}. They proposed the globalizing pointwise $F$ test (the GPF test) based on this test statistic and critical value approximated similarly as for the $L^2$-norm-based test. Although integration seems to a natural operation on $F_n(t)$ or its part, in some situations other using of $F_n(t)$ may be better in the sense of power, as was shown by \cite{Zhangetal2016}. Instead of integral of $F_n(t)$, they used simply $\sup_{t\in I}F_n(t)$ as a test statistic and simulated the critical value of the resulting Fmaxb test via bootstrapping. By intensive simulation studies, \cite{Zhangetal2016} found that the Fmaxb (resp. GPF) test generally has higher power than the GPF (resp. Fmaxb) test when the functional data are moderately or highly (resp. less) correlated.
+In the above test statistics, $\mathrm{SSR}_n(t)$ and $\mathrm{SSE}_n(t)$ were integrated separately. However, by the simulation results of \cite{GoreckiSmaga2015}, it follows that for example integrating the whole quotient $\mathrm{SSR}_n(t)/\mathrm{SSE}_n(t)$ is more powerful in many situations. Such test statistic of the form $\int_I F_n(t)dt$ was considered by \cite{ZhangLiang2014}. They proposed the globalizing pointwise $F$ test (the GPF test) based on this test statistic and critical value approximated similarly as for the $L^2$-norm-based test. Although integration seems to be a natural operation on $F_n(t)$ or its part, in some situations other using of $F_n(t)$ may be better in the sense of power, as was shown by \cite{Zhangetal2013}. Instead of integral of $F_n(t)$, they used simply $\sup_{t\in I}F_n(t)$ as a test statistic and simulated the critical value of the resulting Fmaxb test via bootstrapping. By intensive simulation studies, \cite{Zhangetal2013} found that the Fmaxb (resp. GPF) test generally has higher power than the GPF (resp. Fmaxb) test when the functional data are moderately or highly (resp. less) correlated.
 
 A different approach to test the null hypothesis (\ref{H0u}) was proposed by \cite{CAFB2010}. Their tests are based on the analysis of randomly chosen projections. Suppose that $\mu_i$, $i=1,\dots,l$ belong to a separable Hilbert space $\mathcal{H}$ endowed with a scalar product $\langle\cdot,\cdot\rangle$, and $\xi$ is a Gaussian distribution on this space and each of its one-dimensional projections is nondegenerate. Let $h$ be a vector  chosen randomly from $\mathcal{H}$ using the distribution $\xi$. When the null hypothesis $H_0$ holds, then we can easily observe that for every $h\in\mathcal{H}$, the following null hypothesis
 \begin{equation}
@@ -108,13 +106,11 @@ also holds. Moreover, \cite{CAFB2010} showed that for $\xi$-almost every $h$, $H
     \item Choose, with Gaussian distribution, functions $h_r\in L_2(I)$, $r=1,\dots,k$.
 	 \item Compute the projections $P_{ij}^r=\int_I X_{ij}(t)h_r(t)dt/\left(\int_I h_r^2(t)dt\right)^{1/2}$
 for $i=1,\dots,l$, $j=1,\dots,n_{i}$, $r=1,\dots,k$.
-	 \item For each $r\in\{1,\dots,k\}$,  apply the appropriate ANOVA test for $P_{ij}^r$, $i=1,\dots,l$, $j=1,\dots,n_i$. Let $p_1,\dots,p_r$ denote the resulting $p$~values.
+	 \item For each $r\in\{1,\dots,k\}$,  apply the appropriate ANOVA test for $P_{ij}^r$, $i=1,\dots,l$, $j=1,\dots,n_i$. Let $p_1,\dots,p_k$ denote the resulting $p$~values.
 	 \item Compute the final $p$~value for $H_0$ by the formula $\inf\{kp_{(r)}/r,r=1,\dots,k\}$, where $p_{(1)}\leq\dots\leq p_{(k)}$ are the ordered $p$~values obtained in step 3.
 \end{enumerate}
 
 The tests based on the above procedure are referred to as the test based on random projections. \cite{CAFB2010} suggested to use $k$ near 30, which was confirmed by the results of \cite{GoreckiSmaga2017}. However, in the case of unconvincing results of the test, we should use a higher number of projections. We also have to choose a Gaussian distribution and ANOVA test appearing in steps 1 and 3 of the above procedure, respectively. We can do this in many ways and some of them are implemented in the package \pkg{fdANOVA} (see Section \ref{sec3}). In step 4, we can also use other final $p$~values instead of Benjamini and Hochberg procedure \citep{BenjaminiHochberg1995, BenjaminiYekutieli2001}, as for example Bonferroni correction. However, according to our experience, the test with corrected $p$~value given in step 4 behaves best under finite samples, so we use only it.
-
-Most of the above testing procedures were compared via simulations in the papers of \cite{GoreckiSmaga2015} and \cite{Zhangetal2016}. As mentioned above, the GPF and Fmaxb tests seem to perform best among the tests considered in these articles. However, they were not compared with the testing procedure of \cite{CAFB2010}. Such comparison of the finite sample behavior of these tests is given in Section \ref{sec5}. Different variants of the projection method proposed by \cite{CAFB2010} are also investigated there.
 
 \subsection{Multivariate case}
 \label{sec22}
@@ -129,7 +125,7 @@ H_0:\vect{\mu}_1(t)=\dots=\vect{\mu}_l(t),\ t\in I.
 The first (permutation) tests are based on a basis function representation of the components of the vectors $\mathbf{X}_{ij}(t)$, $i=1,\dots,l$, $j=1,\dots,n_i$, similarly as in the FP test. For this purpose, we assume that $\mathbf{X}_{ij}$ belong to $L_{2}^{p}(I)$ -- a Hilbert space of $p$-dimensional vectors of square integrable functions on the interval $I$, equipped with the inner product: $\langle\mathbf{x},\mathbf{y}\rangle=\int_I\mathbf{x}^{\top}(t)\mathbf{y}(t)dt$. Hence we can represent the components of $\mathbf{X}_{ij}(t)$ in a similar way as in (\ref{Xbfr}). Then the vectors are represented as follows
 \begin{equation}
 \label{XXbfr}
-\mathbf{X}_{ij}(t)=\left(\begin{array}{c}
+\mathbf{X}_{ij}(t)\approx\left(\begin{array}{c}
 \mathbf{c}_{ij1}\\
 \vdots\\
 \mathbf{c}_{ijp}\\
@@ -140,7 +136,7 @@ where $\mathbf{c}_{ijm}=(c_{ijm1},\dots,c_{ijmK_{m}},0,\dots,0)\in R^{KM}$, $\ve
 \mathbf{E}&=\sum_{i=1}^l\sum_{j=1}^{n_{i}}\int_I \left(\mathbf{X}_{ij}(t)-\bar{\mathbf{X}}_{i}(t)\right)\left(\mathbf{X}_{ij}(t)-\bar{\mathbf{X}}_{i}(t)\right)^{\top} dt,\\
 \mathbf{H}&=\sum_{i=1}^l n_{i}\int_I \left(\bar{\mathbf{X}}_{i}(t)-\bar{\mathbf{X}}(t)\right)\left(\bar{\mathbf{X}}_{i}(t)-\bar{\mathbf{X}}(t)\right)^{\top} dt,
 \end{flalign*}
-where $\bar{\mathbf{X}}_i(t)=(1/n_i)\sum_{j=1}^{n_i}\mathbf{X}_{ij}(t),$ $i=1,\dots,l$ and $\bar{\mathbf{X}}(t)=(1/n)\sum_{i=1}^l\sum_{j=1}^{n_i}\mathbf{X}_{ij}(t)$, $t\in I$. Modifying the results of \cite{GoreckiSmaga2017}, we showed that these matrices can be designated only by the coefficient matrices $\mathbf{c}_{ij}$ and appropriate cross product matrix, i.e., $\mathbf{E}=\mathbf{A}-\mathbf{B}$ and $\mathbf{H}=\mathbf{B}-\mathbf{C}$, where
+where $\bar{\mathbf{X}}_i(t)=(1/n_i)\sum_{j=1}^{n_i}\mathbf{X}_{ij}(t),$ $i=1,\dots,l$ and $\bar{\mathbf{X}}(t)=(1/n)\sum_{i=1}^l\sum_{j=1}^{n_i}\mathbf{X}_{ij}(t)$, $t\in I$. Modifying the results of \cite{GoreckiSmaga2017}, we showed that these matrices can be designated only by the coefficient matrices $\mathbf{c}_{ij}$ and appropriate cross product matrix, i.e., $\mathbf{E}\approx\mathbf{A}-\mathbf{B}$ and $\mathbf{H}\approx\mathbf{B}-\mathbf{C}$, where
 \[\mathbf{A}=\sum_{i=1}^l\sum_{j=1}^{n_{i}}\mathbf{c}_{ij}\mathbf{J}_{\vect{\varphi}}\mathbf{c}_{ij}^{\top},\
 \mathbf{B}=\sum_{i=1}^l\frac{1}{n_{i}}\sum_{j=1}^{n_{i}}\sum_{m=1}^{n_{i}}\mathbf{c}_{ij}\mathbf{J}_{\vect{\varphi}}\mathbf{c}_{im}^{\top},\ \mathbf{C}=\frac{1}{n}\sum_{i=1}^l\sum_{j=1}^{n_{i}}\sum_{t=1}^l\sum_{u=1}^{n_{t}}\mathbf{c}_{ij}\mathbf{J}_{\vect{\varphi}}\mathbf{c}_{tu}^{\top},\]
 and $\mathbf{J}_{\vect{\varphi}}$ is the $KM\times KM$ cross product matrix corresponding to $\vect{\varphi}$. The following test statistics for (\ref{H0m}) are constructed based on those appearing in MANOVA \citep{Anderson2003}: the Wilk's lambda $\mathrm{W}=\det(\mathbf{E})/\det(\mathbf{E}+\mathbf{H})$, the Lawley-Hotelling trace $\mathrm{LH}=\mathrm{trace}(\mathbf{H}\mathbf{E}^{-1})$, the Pillai trace $\mathrm{P}=\mathrm{trace}(\mathbf{H}(\mathbf{H}+\mathbf{E})^{-1})$, the Roy's maximum root $\mathrm{R}=\lambda_{\max}(\mathbf{H}\mathbf{E}^{-1})$, where $\lambda_{\max}(\mathbf{M})$ is the maximum eigenvalue of a matrix $\mathbf{M}$. We consider the permutation testing procedures based on these test statistics and refer to them as the W, LH, P and R tests, respectively. Generally, we refer to them as the permutation tests based on a basis function representation for the FMANOVA problem. A quite fast implementation of these permutation tests was obtained by observing that the matrices $\mathbf{A}$ and $\mathbf{C}$ are not changed by any permutation of the data.
@@ -167,11 +163,11 @@ also holds, and further when $H_0$ fails, for $(\xi\times\dots\times\xi)$-almost
     \item Choose, with Gaussian distribution, functions $h_{mr}\in L_2(I)$, $m=1,\dots,p$, $r=1,\dots,k$.
 	 \item Compute the projections $P_{ijm}^r=\int_I X_{ijm}(t)h_{mr}(t)dt/\left(\int_I h_{mr}^2(t)dt\right)^{1/2}$
 for $i=1,\dots,l$, $j=1,\dots,n_{i}$, $m=1,\dots,p$, $r=1,\dots,k$.
-	 \item For each $r\in\{1,\dots,k\}$, apply the appropriate MANOVA test for $\mathbf{P}_{ij}^r=(P_{ij1}^r,\dots,P_{ijp}^r)^{\top}$, $i=1,\dots,l$, $j=1,\dots,n_i$. Let $p_1,\dots,p_r$ denote the resulting $p$~values.
+	 \item For each $r\in\{1,\dots,k\}$, apply the appropriate MANOVA test for $\mathbf{P}_{ij}^r=(P_{ij1}^r,\dots,P_{ijp}^r)^{\top}$, $i=1,\dots,l$, $j=1,\dots,n_i$. Let $p_1,\dots,p_k$ denote the resulting $p$~values.
 \end{enumerate}
 In step 3 of this procedure, the well-known MANOVA tests were applied, namely Wilk's lambda test (Wp test), the Lawley-Hotelling trace test (LHp test), the Pillai trace test (Pp test) and Roy's maximum root test (Rp test). Their permutation versions are also investigated.
 
-By the extensive Monte Carlo simulation studies of \cite{GoreckiSmaga2017}, the performance of the tests considered except the Rp test is very satisfactory under finite samples. Unfortunately, the Rp test does not control the nominal type-I error level, and hence it can not be recommended. The other testing procedures do not perform equally well, and there is no single method performing best. As a supplement to those simulation studies, the finite sample behavior of new variant of the tests based on random projections implemented in the package \pkg{fdANOVA} is investigated in simulations of Section \ref{sec5}.
+By the extensive Monte Carlo simulation studies of \cite{GoreckiSmaga2017}, the performance of the tests considered except the Rp test is very satisfactory under finite samples. Unfortunately, the Rp test does not control the nominal type-I error level, and hence it can not be recommended. The other testing procedures do not perform equally well, and there is no single method performing best.
 
 \section[R implementation]{\proglang{R}~implementation}
 \label{sec3}
@@ -179,13 +175,13 @@ In this section, we present the \proglang{R}~package \pkg{fdANOVA} and illustrat
 
 \subsection{Preparation of the data}
 \label{sec31}
-In practice, functional samples are not continuously observed, i.e., each function is usually observed on a grid of design time points. In our implementations of FANOVA and FMANOVA tests in the \proglang{R}~programming language, all functions are observed on a common grid of design time points equally spaced in the interval $I=[a,b]$. In the case where the design time points are different for different individual functions or not equally spaced in $I$, we follow the methodology proposed by \cite{Zhang2013}. First, we have to reconstruct the functional samples from the observed discrete functional samples using smoothing technique such as regression splines, smoothing splines, P-splines or local polynomial smoothing \citep[see][Chapters 2-3]{Zhang2013}. For this purpose, in \proglang{R} we can use the function \code{smooth.spline} from the \pkg{stats} package \citep{RCoreTeam2017} or functions given in the packages \pkg{splines} \citep{RCoreTeam2017}, \pkg{bigsplines} \citep{Helwig2016}, \pkg{pspline} \citep{pspline} and \pkg{locpol} \citep{OjedaCabrera2012}. After that we discretize each individual function of the reconstructed functional samples on a common grid of $\mathcal{T}$ time points equally spaced in $I$, and then the implementations of the tests can be applied to discretized samples.
+In practice, functional samples are not continuously observed, i.e., each function is usually observed on a grid of design time points. In our implementations of FANOVA and FMANOVA tests in the \proglang{R}~programming language, all functions are observed on a common grid of design time points equally spaced in the interval $I=[a,b]$. In the case where the design time points are different for different individual functions or not equally spaced in $I$, we follow the methodology proposed by \cite{Zhang2013}. First, we have to reconstruct the functional samples from the observed discrete functional samples using smoothing technique such as regression splines, smoothing splines, P-splines or local polynomial smoothing \citep[see][Chapters 2-3]{Zhang2013}. For this purpose, in \proglang{R} we can use the function \code{smooth.spline()} from the \pkg{stats} package \citep{RCoreTeam2017} or functions given in the packages \pkg{splines} \citep{RCoreTeam2017}, \pkg{bigsplines} \citep{Helwig2016}, \pkg{pspline} \citep{pspline} and \pkg{locpol} \citep{OjedaCabrera2012}. After that we discretize each individual function of the reconstructed functional samples on a common grid of $\mathcal{T}$ time points equally spaced in $I$, and then the implementations of the tests can be applied to discretized samples.
 
 \subsection{Package functionality}
 \label{sec32}
-Now, we describe the implementation of the tests for analysis of variance problem for univariate and multivariate functional data in the \proglang{R}~package \pkg{fdANOVA}. As we will see many of the implemented tests may be performed with different values of parameters. However, by simulation and real data examples presented in the present and previous papers (see Sections~\ref{sec2} and \ref{sec5}), satisfactory results are usually obtained by using the default values of these parameters. Nevertheless, when the results are unconvincing (e.g., the $p$~values are close to the significance level), we have the opportunity to use other options provided by the functions of the package.
+Now, we describe the implementation of the tests for analysis of variance problem for univariate and multivariate functional data in the \proglang{R}~package \pkg{fdANOVA}. As we will see many of the implemented tests may be performed with different values of parameters. However, by simulation and real data examples presented in the previous papers (see Sections~\ref{sec2}), satisfactory results are usually obtained by using the default values of these parameters. Nevertheless, when the results are unconvincing (e.g., the $p$~values are close to the significance level), we have the opportunity to use other options provided by the functions of the package.
 
-All tests for FANOVA problem presented in Section \ref{sec21} are implemented in the function \code{fanova.tests}:
+All tests for FANOVA problem presented in Section \ref{sec21} are implemented in the function \code{fanova.tests()}:
 \begin{CodeChunk}
 \begin{CodeInput}
 R> library("fdANOVA")
@@ -215,7 +211,7 @@ c("FP", "CH", "CS", "L2N", "L2B", "L2b", "FN", "FB", "Fb", "GPF",
 \item \code{nslaves} -- if \code{parallel = TRUE}, a number of slaves. Its default value means that it will be equal to a number of logical processes of a computer used.
 \end{itemize}
 
-The list \code{params} can contain all or a part of the elements \code{paramFP}, \code{paramCH}, \code{paramCS}, \code{paramL2b}, \code{paramFb}, \code{paramFmaxb} and \code{paramTRP} for passing the parameters for the FP, CH, CS, L$^2$b, Fb, Fmaxb tests and the test based on random projections, respectively, to the function \code{fanova.tests}. They are described as follows. The list
+The list \code{params} can contain all or a part of the elements \code{paramFP}, \code{paramCH}, \code{paramCS}, \code{paramL2b}, \code{paramFb}, \code{paramFmaxb} and \code{paramTRP} for passing the parameters for the FP, CH, CS, L$^2$b, Fb, Fmaxb tests and the test based on random projections, respectively, to the function \code{fanova.tests()}. They are described as follows. The list
 \begin{Code}
 paramFP = list(int, B.FP = 1000, basis = c("Fourier", "b-spline", "own"),
                own.basis, own.cross.prod.mat,
@@ -258,7 +254,7 @@ where:
 \begin{itemize}
 \item \code{k} -- a vector of numbers of projections.
 
-\item \code{projection} -- a method of generating Gaussian processes in step 1 of the testing procedure based on random projections presented in Section \ref{sec2}. If \code{projection = "GAUSS"}, the Gaussian white noise is generated as in the function \code{anova.RPm} from the \proglang{R}~package \pkg{fda.usc} \citep{FBOF2012}. In the second case, the Brownian motion is generated.
+\item \code{projection} -- a method of generating Gaussian processes in step 1 of the testing procedure based on random projections presented in Section \ref{sec2}. If \code{projection = "GAUSS"}, the Gaussian white noise is generated as in the function \code{anova.RPm()} from the \proglang{R}~package \pkg{fda.usc} \citep{FBOF2012}. In the second case, the Brownian motion is generated.
 
 \item \code{permutation} -- a logical indicating whether to compute $p$~values by permutation method.
 
@@ -267,9 +263,9 @@ where:
 
 To perform step 3 of the procedure based on random projections given in Section \ref{sec21}, in the package, we use five testing procedures: the standard (\code{paramTRP$permutation = FALSE}) and permutation (\code{paramTRP$permutation = TRUE}) tests based on ANOVA F~test statistic and ANOVA-type statistic (ATS) proposed by \cite{Brunneretal1997}, as well as the testing procedure based on Wald-type permutation statistic (WTPS) of \cite{Paulyetal2015}.
 
-The function \code{fanova.tests} returns a list of the class \code{fanovatests}. This list contains the values of the test statistics, the $p$~values and the parameters used. The results for a given test are given in a list (being an element of output list) named the same as the indicator of a test in the vector \code{test}. Additional outputs as the chosen optimal length of basis expansion (the FP test), the values of estimators used in approximations of null distributions of test statistics (the L$^2$N, L$^2$B, FN, FB, GPF tests) and projections of the data (the test based on random projections) are contained in appropriate lists. The projections of the data are contained in a list of the length equal to length of vector \code{k}, whose $i$-th element is an $n\times \text{\code{k[i]}}$ matrix with columns being projections of the data.
+The function \code{fanova.tests()} returns a list of the class \code{fanovatests}. This list contains the values of the test statistics, the $p$~values and the parameters used. The results for a given test are given in a list (being an element of output list) named the same as the indicator of a test in the vector \code{test}. Additional outputs as the chosen optimal length of basis expansion (the FP test), the values of estimators used in approximations of null distributions of test statistics (the L$^2$N, L$^2$B, FN, FB, GPF tests) and projections of the data (the test based on random projections) are contained in appropriate lists. The projections of the data are contained in a list of the length equal to length of vector \code{k}, whose $i$-th element is an $n\times \text{\code{k[i]}}$ matrix with columns being projections of the data.
 
-The permutation tests based on a basis function representation for FMANOVA problem, i.e., the W, LH, P and R tests are implemented in the function \code{fmanova.ptbfr}:
+The permutation tests based on a basis function representation for FMANOVA problem, i.e., the W, LH, P and R tests are implemented in the function \code{fmanova.ptbfr()}:
 \begin{CodeChunk}
 \begin{CodeInput}
 R> library("fdANOVA")
@@ -285,7 +281,7 @@ function(x = NULL, group.label, int, B = 1000,
          minK = NULL, maxK = NULL, norder = 4, gamma.eBIC = 0.5)
 \end{CodeOutput}
 \end{CodeChunk}
-The parameters \code{group.label}, \code{int}, \code{B}, \code{parallel}, \code{nslaves}, \code{basis}, \code{norder} and \code{gamma.eBIC} are the same as in the function \code{fanova.tests} (\code{B} corresponds to \code{B.FP}). The other arguments of \code{fmanova.ptbfr} are described as follows:
+The parameters \code{group.label}, \code{int}, \code{B}, \code{parallel}, \code{nslaves}, \code{basis}, \code{norder} and \code{gamma.eBIC} are the same as in the function \code{fanova.tests()} (\code{B} corresponds to \code{B.FP}). The other arguments of \code{fmanova.ptbfr()} are described as follows:
 \begin{itemize}
 \item \code{x} -- a list of $\mathcal{T}\times n$ matrices of data, whose each column is a discretized version of a function  and rows correspond to design time points. The $m$th element of this list contains the data of $m$th feature, $m=1,\dots,p$. Its default values is \code{NULL}, because a basis representation of the data can be given instead of raw observations (see the parameter \code{own.basis} below).
 
@@ -297,12 +293,12 @@ The parameters \code{group.label}, \code{int}, \code{B}, \code{parallel}, \code{
 
 \item \code{method} -- a choice of method for selecting the common value for all observations from the values of $K_{m}$ corresponding to all processes.
 
-\item \code{minK} (resp. \code{maxK}) -- a minimum (resp. maximum) value of $K_m$. Further remarks about these arguments are the same as for the function \code{fanova.tests}.
+\item \code{minK} (resp. \code{maxK}) -- a minimum (resp. maximum) value of $K_m$. Further remarks about these arguments are the same as for the function \code{fanova.tests()}.
 \end{itemize}
 
-The function \code{fmanova.ptbfr} returns a list of the class \code{fmanovaptbfr} containing the values of the test statistics (\code{W}, \code{LH}, \code{P}, \code{R}), the $p$~values (\code{pvalueW}, \code{pvalueLH}, \code{pvalueP}, \code{pvalueR}), chosen optimal values of $K_m$ and the parameters used. This function uses the \proglang{R}~package \pkg{fda} \citep{Ramsayetal2014}.
+The function \code{fmanova.ptbfr()} returns a list of the class \code{fmanovaptbfr} containing the values of the test statistics (\code{W}, \code{LH}, \code{P}, \code{R}), the $p$~values (\code{pvalueW}, \code{pvalueLH}, \code{pvalueP}, \code{pvalueR}), chosen optimal values of $K_m$ and the parameters used. This function uses the \proglang{R}~package \pkg{fda} \citep{Ramsayetal2014}.
 
-The function \code{fmanova.trp} performs the testing procedures based on random projections for FMANOVA problem (the Wp, LHp, Pp and Rp tests):
+The function \code{fmanova.trp()} performs the testing procedures based on random projections for FMANOVA problem (the Wp, LHp, Pp and Rp tests):
 \begin{CodeChunk}
 \begin{CodeInput}
 R> library("fdANOVA")
@@ -314,13 +310,13 @@ function(x, group.label, k = 30, projection = c("GAUSS", "BM"),
          parallel = FALSE, nslaves = NULL)
 \end{CodeOutput}
 \end{CodeChunk}
-The first two parameters of this function as well as the arguments \code{parallel}, \code{nslaves} are the same as in the function \code{fmanova.ptbfr}. The other ones have the same meaning as in the parameter list \code{paramTRP} of the function \code{fanova.tests} (\code{B} corresponds to \code{B.TRP}). The function \code{fmanova.trp} returns a list of class \code{fmanovatrp} containing the parameters and the following elements ($|\text{\code{k}}|$ denotes the length of vector \code{k}): \code{pvalues} -- a $4\times |\text{\code{k}}|$ matrix of $p$~values of the tests; \code{data.projections} -- a list of length $|\text{\code{k}}|$, whose elements are lists of $n\times p$ matrices of projections of the observations.
+The first two parameters of this function as well as the arguments \code{parallel}, \code{nslaves} are the same as in the function \code{fmanova.ptbfr()}. The other ones have the same meaning as in the parameter list \code{paramTRP} of the function \code{fanova.tests()} (\code{B} corresponds to \code{B.TRP}). The function \code{fmanova.trp()} returns a list of class \code{fmanovatrp} containing the parameters and the following elements ($|\text{\code{k}}|$ denotes the length of vector \code{k}): \code{pvalues} -- a $4\times |\text{\code{k}}|$ matrix of $p$~values of the tests; \code{data.projections} -- a list of length $|\text{\code{k}}|$, whose elements are lists of $n\times p$ matrices of projections of the observations.
 
-The executions of selecting the optimum length of basis expansion by some information criterion, the bootstrap, permutation and projection  loops are the most time consuming steps of the testing procedures under consideration. To reduce the computational cost of the procedures, they are parallelized, when the parameter \code{parallel} is set to \code{TRUE}. The parallel execution is handled by \pkg{doParallel} package \citep{RASW2015}. Some details of the parallel implementation and its efficiency are discussed in Section~\ref{sec4}.
+The executions of selecting the optimum length of basis expansion by some information criterion, the bootstrap, permutation and projection  loops are the most time consuming steps of the testing procedures under consideration. To reduce the computational cost of the procedures, they are parallelized, when the parameter \code{parallel} is set to \code{TRUE}. The parallel execution is handled by \pkg{doParallel} package \citep{RASW2015}.
 
-In the package, the number of auxiliary functions are also contained. The $p$~values of the tests based on random projections for FANOVA problem against the number of projections are visualized by the function \code{plot.fanovatests} using the package \pkg{ggplot2} \citep{Wickham2009}, which is controlled by the following parameters: \code{x} -- an \code{fanovatests} object, more precisely, a result of the function \code{fanova.tests} for the standard tests based on random projections; \code{y} -- an \code{fanovatests} object, more precisely, a result of the function \code{fanova.tests} for the permutation tests based on random projections. Similarly, the $p$~values of the Wp, LHp, Pp and Rp tests are plotted by the function \code{plot.fmanovatrp}. The arguments of this function are as follows: \code{x} -- an \code{fmanovatrp} object, more precisely, a result of the function \code{fmanova.trp} for the standard tests; \code{y} -- an \code{fmanovatrp} object, more precisely, a result of the function \code{fmanova.trp} for the permutation tests; \code{withoutRoy} -- a logical indicating whether to plot the $p$~values of the Rp test. We can use only one of the arguments \code{x} and \code{y}, or both simultaneously.
+In the package, the number of auxiliary functions are also contained. The $p$~values of the tests based on random projections for FANOVA problem against the number of projections are visualized by the function \code{plot.fanovatests()} using the package \pkg{ggplot2} \citep{Wickham2009}, which is controlled by the following parameters: \code{x} -- an \code{fanovatests} object, more precisely, a result of the function \code{fanova.tests()} for the standard tests based on random projections; \code{y} -- an \code{fanovatests} object, more precisely, a result of the function \code{fanova.tests()} for the permutation tests based on random projections. Similarly, the $p$~values of the Wp, LHp, Pp and Rp tests are plotted by the function \code{plot.fmanovatrp()}. The arguments of this function are as follows: \code{x} -- an \code{fmanovatrp} object, more precisely, a result of the function \code{fmanova.trp()} for the standard tests; \code{y} -- an \code{fmanovatrp} object, more precisely, a result of the function \code{fmanova.trp()} for the permutation tests; \code{withoutRoy} -- a logical indicating whether to plot the $p$~values of the Rp test. We can use only one of the arguments \code{x} and \code{y}, or both simultaneously.
 
-Using the package \pkg{ggplot2} \citep{Wickham2009}, the function \code{plotFANOVA}:
+Using the package \pkg{ggplot2} \citep{Wickham2009}, the function \code{plotFANOVA()}:
 \begin{CodeChunk}
 \begin{CodeInput}
 R> library("fdANOVA")
@@ -337,7 +333,7 @@ produces a plot showing univariate functional observations with or without indic
 
 \item \code{group.label} -- a character vector containing group labels. Its default value means that all functional observations are drawn without division into groups.
 
-\item \code{int} -- this parameter is the same as in the function \code{fanova.tests}.
+\item \code{int} -- this parameter is the same as in the function \code{fanova.tests()}.
 
 \item \code{separately} -- a logical indicating how groups are drawn. If \code{separately = FALSE}, groups are drawn on one plot by different colors. When \code{separately = TRUE}, they are depicted in different panels.
 
@@ -346,12 +342,12 @@ produces a plot showing univariate functional observations with or without indic
 \item \code{smooth} -- a logical indicating whether to plot reconstructed data via smoothing splines instead of raw data.
 \end{itemize}
 
-The functions \code{print.fanovatests}, \code{print.fmanovaptbfr} and \code{print.fmanovatrp} print out the $p$~values and values of the test statistics for the implemented testing procedures. Additionally, the functions \code{summary.fanovatests}, \code{summary.fmanovaptbfr} and \code{summary.fmanovatrp} print out information about the data and parameters of the methods.
+The functions \code{print.fanovatests()}, \code{print.fmanovaptbfr()} and \code{print.fmanovatrp()} print out the $p$~values and values of the test statistics for the implemented testing procedures. Additionally, the functions \code{summary.fanovatests()}, \code{summary.fmanovaptbfr()} and \code{summary.fmanovatrp()} print out information about the data and parameters of the methods.
 
 When calling the functions of the \pkg{fdANOVA} package, the software will check for presence of the \pkg{doBy}, \pkg{doParallel}, \pkg{ggplot2}, \pkg{fda}, \pkg{foreach}, \pkg{magic},  \pkg{MASS} and \pkg{parallel} packages if necessary \citep{doBy2016, RASW2015, Wickham2009,
 Ramsayetal2014, magic2005, MASS2002}. If the required packages are not installed, an error message will be displayed.
 
-It is worth to mention that fifteen labeled multivariate functional data sets are available in the \pkg{mfds} package \citep{GoreckiSmaga2017mfds}, which is a kind of supplement to the \pkg{fdANOVA} package. Table~\ref{Tab1} depicts brief information about these data sets, i.e., numbers of variables, design time points, groups and observations. The data sets were created from multivariate time series data available in \cite{Chenetal2015}, \cite{Leebetal2007}, \cite{Lichman2013} and \cite{Olszewski2001} by extending all variables to the same length as in \cite{Rodriguezetal2005}. They originate from different domains, including handwriting recognition, medicine, robotics, etc. The data sets can be used for illustrating and evaluating practical efficiency of classification and statistical inference methods, etc. \citep[see, for example,][]{GoreckiSmaga2015,GoreckiSmaga2017}. In Section~\ref{sec4}, two of them are considered in experiments performed for evaluating efficiency of parallel implementation in the package.
+It is worth to mention that fifteen labeled multivariate functional data sets are available in the \pkg{mfds} package \citep{GoreckiSmaga2017mfds}, which is a kind of supplement to the \pkg{fdANOVA} package. Table~\ref{Tab1} depicts brief information about these data sets, i.e., numbers of variables, design time points, groups and observations. The data sets were created from multivariate time series data available in \cite{Chenetal2015}, \cite{Leebetal2007}, \cite{Lichman2013} and \cite{Olszewski2001} by extending all variables to the same length as in \cite{Rodriguezetal2005}. They originate from different domains, including handwriting recognition, medicine, robotics, etc. The data sets can be used for illustrating and evaluating practical efficiency of classification and statistical inference methods, etc. \citep[see, for example,][]{GoreckiSmaga2015,GoreckiSmaga2017}.
 
 \begin{table}
 \begin{center}
@@ -398,7 +394,7 @@ Similarly to \cite{GoreckiSmaga2017}, for illustrative purposes, the functional 
 R> group.label.gait <- rep(1:3, each = 13)
 \end{CodeInput}
 \end{CodeChunk}
-We can plot the functional data by using the function \code{plotFANOVA}. For example, we plot the observations for the first functional feature without (Figure~\ref{Fig1} (a)) and with indication of the samples (Figure~\ref{Fig1} (b) and (c)) as well as the group mean functions (Figure~\ref{Fig1} (d)).
+We can plot the functional data by using the function \code{plotFANOVA()}. For example, we plot the observations for the first functional feature without (Figure~\ref{Fig1} (a)) and with indication of the samples (Figure~\ref{Fig1} (b) and (c)) as well as the group mean functions (Figure~\ref{Fig1} (d)).
 \begin{CodeChunk}
 \begin{CodeInput}
 R> library("fdANOVA")
@@ -419,7 +415,7 @@ height=0.45\textwidth]{Fig1.pdf}
 	\label{Fig1}
 \end{figure}
 
-From Figure~\ref{Fig1}, it seems that the mean functions of the three samples do not differ significantly. To confirm this statistically, we use the FANOVA tests implemented in the \code{fanova.tests} function. First, we use default values of the parameters of this function:
+From Figure~\ref{Fig1}, it seems that the mean functions of the three samples do not differ significantly. To confirm this statistically, we use the FANOVA tests implemented in the \code{fanova.tests()} function. First, we use default values of the parameters of this function:
 \begin{CodeChunk}
 \begin{CodeInput}
 R> set.seed(123)
@@ -429,13 +425,13 @@ R> (fanova <- fanova.tests(x = x.gait[[1]], group.label = group.label.gait))
      Analysis of Variance for Functional Data
 
 FP test - permutation test based on a basis function representation
-Test statistic = 1.468218  p-value = 0.208
+Test statistic = 1.468218  p-value = 0.198
 
 CH test - L2-norm-based parametric bootstrap test for homoscedastic samples
-Test statistic = 7911.385  p-value = 0.2282
+Test statistic = 7911.385  p-value = 0.2247
 
 CS test - L2-norm-based parametric bootstrap test for heteroscedastic samples
-Test statistic = 7911.385  p-value = 0.1969
+Test statistic = 7911.385  p-value = 0.1944
 
 L2N test - L2-norm-based test with naive method of estimation
 Test statistic = 2637.128  p-value = 0.2106562
@@ -444,7 +440,7 @@ L2B test - L2-norm-based test with bias-reduced method of estimation
 Test statistic = 2637.128  p-value = 0.1957646
 
 L2b test - L2-norm-based bootstrap test
-Test statistic = 2637.128  p-value = 0.2212
+Test statistic = 2637.128  p-value = 0.2169
 
 FN test - F-type test with naive method of estimation
 Test statistic = 1.46698  p-value = 0.2226683
@@ -453,18 +449,18 @@ FB test - F-type test with bias-reduced method of estimation
 Test statistic = 1.46698  p-value = 0.2198691
 
 Fb test - F-type bootstrap test
-Test statistic = 1.46698  p-value = 0.2705
+Test statistic = 1.46698  p-value = 0.2704
 
 GPF test - globalizing the pointwise F-test
 Test statistic = 1.363179  p-value = 0.2691363
 
 Fmaxb test - Fmax bootstrap test
-Test statistic = 3.752671  p-value = 0.1887
+Test statistic = 3.752671  p-value = 0.1815
 
 TRP - tests based on k = 30 random projections
-p-value ANOVA = 0.4082394
-p-value ATS = 0.2994233
-p-value WTPS = 0.3465
+p-value ANOVA = 0.4026718
+p-value ATS   = 0.3422311
+p-value WTPS  = 0.509
 \end{CodeOutput}
 \end{CodeChunk}
 Besides of the $p$~values displayed above, the list of matrices of projections of the data may be of practical interest for the test based on random projections users. The reason for this is that we can check the assumptions of the tests used in step 3 of the procedure based on random projections (see Section~\ref{sec21}), e.g., the normality assumptions of ANOVA F test. Such inspection may result in choosing the appropriate test used in this step. This is especially important when the tests based on random projections differ in their decisions.
@@ -474,12 +470,12 @@ R> fanova$TRP$data.projections
 \end{CodeInput}
 \begin{CodeOutput}
 [[1]]
-          [,1]      [,2]      [,3]       [,4] ...    [,30]
-[1,]  37.44057 -26.51193  17.28588  11.323063 ... 1.986230
-[2,]  45.50439 -28.20233  21.76841   8.375763 ... 4.213405
-[3,]  47.81353 -26.38955  22.49703  10.449332 ... 7.311809
+          [,1]     [,2]     [,3]      [,4]          [,30]
+[1,]  56.27204 42.95853 4.717162  2.128967 ...  -6.055347
+[2,]  59.79175 47.34407 4.081016  5.029328 ... -15.867838
+[3,]  59.56066 50.29226 5.867918  4.284960 ... -17.816042
 ...
-[39,] 60.13816 -35.42660  27.27788  14.054984 ... 1.997130
+[39,] 82.65391 65.15959 12.971629 7.695403 ...  -7.070380
 \end{CodeOutput}
 \end{CodeChunk}
 As expected, neither FANOVA test rejects the null hypothesis. Now, we show how particular tests can be chosen and how the parameters of these tests can be changed. For the FP test, we use the predefined basis function representation of the data. For this purpose, we expand the data in the b-spline basis by using the functions from the \pkg{fda} package. They return the coefficients of expansion as well as the cross product matrix corresponding to the basis functions. For control, we choose the GPF test, which does not need any additional parameters. The Fmaxb test is performed by 1000 bootstrap samples. For the tests based on random projections, 10 and 15 projections are generated by using the Brownian motion, and $p$~values are computed by the permutation method.
@@ -505,26 +501,26 @@ R> fanova.tests(x.gait[[1]], group.label.gait,
      Analysis of Variance for Functional Data
 
 FP test - permutation test based on a basis function representation
-Test statistic = 1.468105  p-value = 0.199
+Test statistic = 1.468105  p-value = 0.193
 
 GPF test - globalizing the pointwise F-test
 Test statistic = 1.363179  p-value = 0.2691363
 
 Fmaxb test - Fmax bootstrap test
-Test statistic = 3.752671  p-value = 0.17
+Test statistic = 3.752671  p-value = 0.177
 
 TRP - tests based on k = 10 random projections
-p-value ANOVA = 0.26
-p-value ATS = 0.259
-p-value WTPS = 0.329
+p-value ANOVA = 0.3583333
+p-value ATS   = 0.3871429
+p-value WTPS  = 0.465
 
 TRP - tests based on k = 15 random projections
-p-value ANOVA = 0.252
-p-value ATS = 0.249
-p-value WTPS = 0.339
+p-value ANOVA = 0.504
+p-value ATS   = 0.507
+p-value WTPS  = 0.345
 \end{CodeOutput}
 \end{CodeChunk}
-The above examples concern only the first functional feature of the \textit{gait} data set. Similar analysis can be performed for the second one. However, both features can be simultaneously investigated by using the FMANOVA tests desribed in Section~\ref{sec22}. First, we consider the permutation tests based on a basis function representation implemented in the function \code{fmanova.ptbfr}. We apply this function to the whole data set specifying non-default values of most of parameters. Here, we also show how use the function \code{summary.fmanovaptbfr} to additionally obtain a summary of the data and test parameters. Observe that the results are consistent with these obtained by FANOVA tests.
+The above examples concern only the first functional feature of the \textit{gait} data set. Similar analysis can be performed for the second one. However, both features can be simultaneously investigated by using the FMANOVA tests desribed in Section~\ref{sec22}. First, we consider the permutation tests based on a basis function representation implemented in the function \code{fmanova.ptbfr()}. We apply this function to the whole data set specifying non-default values of most of parameters. Here, we also show how use the function \code{summary.fmanovaptbfr()} to additionally obtain a summary of the data and test parameters. Observe that the results are consistent with these obtained by FANOVA tests.
 \begin{CodeChunk}
 \begin{CodeInput}
 R> set.seed(123)
@@ -549,10 +545,10 @@ Range of data = [0.025 , 0.975]
 
  Testing results
 
-W  = 0.9077424   p-value = 0.5294
-LH = 0.1003732   p-value = 0.524
-P  = 0.09340229  p-value = 0.5334
-R  = 0.08565056  p-value = 0.388
+W  = 0.9077424   p-value = 0.5322
+LH = 0.1003732   p-value = 0.5286
+P  = 0.09340229  p-value = 0.5366
+R  = 0.08565056  p-value = 0.3852
 
  Parameters of test
 
@@ -563,7 +559,7 @@ Method: mean
 Km = 20 20 KM = 20 minK = 5 maxK = 20
 \end{CodeOutput}
 \end{CodeChunk}
-Finally, we apply the tests based on random projections for the FMANOVA problem in the \textit{gait} data set. In the following, these tests are performed with $k=1,5,10,15,20$ projections as well as standard and permutation methods. The resulting $p$~values are visualized by the \code{plot.fmanovatrp} function:
+Finally, we apply the tests based on random projections for the FMANOVA problem in the \textit{gait} data set. In the following, these tests are performed with $k=1,5,10,15,20$ projections as well as standard and permutation methods. The resulting $p$~values are visualized by the \code{plot.fmanovatrp()} function:
 \begin{CodeChunk}
 \begin{CodeInput}
 R> set.seed(123)
@@ -584,221 +580,7 @@ height=0.45\textwidth]{Fig2.pdf}
 
 The obtained plots are shown in Figure \ref{Fig2}. As we can observe, except the standard Rp test, all testing procedures behave similarly and do not reject the null hypothesis. The standard Rp test does not keep the pre-assigned type-I error rate as \cite{GoreckiSmaga2017} shown in simulations. More precisely, this test is usually too liberal, which explains that its $p$~values are much smaller than these of the other testing procedures. That is why the function has option not to plot the $p$~values of this test.
 
-\section{Efficiency of the parallel implementation}
-\label{sec4}
-As we mentioned in Section~\ref{sec32}, the functions of the \pkg{fdANOVA} package provide the option of parallelization of the execution of the most time consuming steps of performing the testing procedures. By default the parameter \code{parallel} is set to \code{FALSE}, which corresponds to sequential version. This option should be used when the data set is not too large or we have a single processor machine with one core, since the parallelization is very inefficient in such cases. When it is possible or needed, we specify \code{parallel = TRUE} to perform parallel computations using process forking based on the \pkg{doParallel} package \citep{RASW2015}. We also have possibility of controlling a number of parallel tasks by setting the parameter \code{nslaves}. This parameter is set to a number of logical processes of used computer by default, which is an optimal choice. This parallel method can be performed on a single logical machine only. Further information about parallel computing in \proglang{R} and its usage can be found for example in \cite{Schmidbergeretal2009} and \cite{Teisseyreetal2016}.
-
-In the remainder of this section, we discuss the results of experiments evaluating efficiency of parallel implementation in the \pkg{fdANOVA} package. They were performed for one physical computer with 14 cores (processor Intel(R) Xeon(R) E5-2690 v4 @ 2.6 GHz, 3.5 GHz all-core turbo), 64 GB RAM, Windows 7 64-bit, \proglang{R}~3.3.3. We compared the execution time and speedup of the sequential and parallel versions. The number of slaves was set to $2,4,8$ and $14$. The experiments were performed by using the \textit{Graz} and \textit{uWaveGestureLibrary} data sets available in the \pkg{mfds} package \citep{GoreckiSmaga2017mfds}. We present and discuss the results of the experiments based on these data sets and the FANOVA tests implemented via parallel method in the function \code{fanova.tests}, i.e., the FP, CH, CS, L$^2$b, Fb, Fmaxb tests and the permutation test based on random projections. These tests were applied to the first features of these data sets by using default values of parameters, i.e., $1000, 10{,}000$ permutation replicates for the FP test and the tests based on random projections, respectively, 10,000 bootstrap samples and 30 projections. In the other settings, similar results have been obtained, and therefore, they are omitted for space saving.
-
-\begin{figure}[!t]
-\includegraphics[width=0.99\textwidth,
-height=0.45\textwidth]{Fig3.pdf}
-		\caption{Execution time and speedup versus the number of slaves and the number of design time points $\mathcal{T}$ obtained for the \textit{Graz} data set (One slave refers to the sequential version.).}
-		\label{Fig3}
-\end{figure}
-
-In the first experiment, the first feature of the \textit{Graz} data set was considered. This data set contains $n=140$ functional observations, which were measured in $\mathcal{T}=1152$ design time points and divided into two groups each of 70 observations. In this experiment, we studied how the computational time and speedup depend on the number of design time points, i.e., we applied the tests to the truncated \textit{Graz} data sets with $\mathcal{T}=100,400,800,1152$ design time points. The second experiment is based on the first feature of the \textit{uWaveGestureLibrary} data set, which contains $n=4478$ functional observations measured in $\mathcal{T}=315$ design time points and divided into eight samples of 559 or 560 observations. In this case, we investigated how the computational time and speedup depend on the number of observations. For this purpose, we considered the subsets of the \textit{uWaveGestureLibrary} data set consisting of $n=100,400,700,1000$ observations. Figures~\ref{Fig3} and \ref{Fig4} depict the results of both experiments.
-
-Observe that the parallel implementation results in satisfactory shortening the computational time. The usage of two slaves has already made calculations much faster. The execution time strictly decreases with increase of the number of slaves. The behavior of speedup also seems to be satisfactory, although it is not linear as there are other sequentially executed tasks in the functions. Nevertheless, for two and four slaves, the speedup is almost linear in both experiments, i.e., it is close to the numbers of parallel tasks. From the first experiment, however, it follows that the speedup for greater number of slaves may decrease with increase of the number of design time points (Figure~\ref{Fig3}). Fortunately, the opposite usually holds when the number of observations increases as in the second experiment (Figure~\ref{Fig4}). This can perhaps be explained by that the parallel tasks are more concerned in functional observations than their values in particular design time points. The implementation of the permutation tests based on random projections seems to be the most time-consuming. When one wants to perform this tests, it is recommended to use the parallel method even for not very large data sets. However, when we only choose other testing procedures for analysis, the parallelization should be used for larger data sets. Otherwise it may not make sense. Summarizing, the parallel implementation enables to reduce the computation time significantly, when it is used appropriately.
-
-\begin{figure}[!t]
-\includegraphics[width=0.99\textwidth,
-height=0.45\textwidth]{Fig4.pdf}
-		\caption{Execution time and speedup versus the number of slaves and the number of observations $n$ obtained for the \textit{uWaveGestureLibrary} data set (One slave refers to the sequential version.).}
-		\label{Fig4}
-\end{figure}
-
-\section{Simulation study}
-\label{sec5}
-In this section, we consider simulation studies to compare the GPF, Fmaxb tests and the tests based on random projections. For the last one, two methods of generating Gaussian processes implemented in the \pkg{fdANOVA} package are considered. As a result, simulations indicate the recommended tests for different scenarios.
-
-The simulations scenarios were inspired by a Monte Carlo study in \cite{ZhangLiang2014} and \cite{Zhangetal2016}.
-
-\subsection{Simulation for FMANOVA tests}
-\label{sec51}
-To compare the FMANOVA tests based on random projections with different methods of generating Gaussian processes, we consider three groups of two-dimensional functional data and two vectors $\mathbf{n}=(n_1,n_2,n_3)$ of sample sizes $\mathbf{n}_1=(10,10,10)$ and $\mathbf{n}_2=(10,20,15)$. Discrete functional samples are generated by using the model $x_{prs}(t)=\eta_{pr}(t)+v_{prs}(t)$, $t\in[0,1]$, $p=1,2,r=1,2,3$, $s=1,\dots,n_r$. The mean group functions are as follows: $\eta_{1r}(t)=\mathbf{c}_1^{\top}(1,t,t^2,t^3)^{\top}$ for $r=1,2$, $\eta_{13}(t)=(\mathbf{c}_1+2\delta\mathbf{u})^{\top}(1,t,t^2,t^3)^{\top}$ and $\eta_{2r}(t)=\mathbf{c}_2^{\top}(1,t,t^2,t^3)^{\top}$ for $r=1,2,3$, where $\mathbf{c}_1=(1, 2.3, 3.4, 1.5)^{\top}$, $\mathbf{c}_2=(2.2, 1.6, 1, 2.9)^{\top}$. Thus, the differences between appropriate group mean functions is controlled by $\delta$,  whose values are contained in the tables of simulation results. Moreover, the direction of these differences is specified by $\mathbf{u}=(1,2,3,4)^{\top}/\sqrt{30}$. For i.i.d. $v_{prs}(t)\sim SP(0,\gamma)$, we take $v_{prs}(t)=\mathbf{b}_{prs}^{\top}\vect{\Psi}(t)$, $\mathbf{b}_{prs}=(b_{prs,1},\dots,b_{prs,11})^{\top}$, $b_{prs,w}\stackrel{d}{=}\sqrt{\lambda_w}y_{prs,w},w=1,\dots,11$, where $\vect{\Psi}(t)=(\psi_1(t),\dots,\psi_{11}(t))^{\top}$ is the orthonormal basis vector such that $\psi_1(t)=1$, $\psi_{2\omega}(t)=\sqrt{2}\sin(2\pi\omega t)$ and $\psi_{2\omega+1}(t)=\sqrt{2}\cos(2\pi\omega t)$, $\omega=1,\dots,5$, $\lambda_w=1.5\rho^w$, $\rho=0.1,0.3,0.5,0.7,0.9$, and $y_{prs,w}$ are independent random variables, $\mathrm{E}(y_{prs,w})=0$, $\mathrm{Var}(y_{prs,w})=1$. The Gaussian (resp. non-Gaussian) functional observations are obtained by considering $y_{prs,w}\sim N(0,1)$ (resp. $y_{prs,w}\sim t_4/\sqrt{2}$). Notice that $\gamma(s,t)$ is of the form $\vect{\Psi}(s)^{\top}\text{diag}(\lambda_1,\dots,\lambda_{11})\vect{\Psi}(t)$ and the correlation increases with decreasing $\rho$. The functions $x_{prs}(t)$ are assumed to be observed at the design time points $q/51$, $q=1,\dots,50$. For $\delta=0$ (resp. $\delta\neq 0$), the null hypothesis is true (resp. false) and we investigate the size control (resp. power) of the tests. This model will be referred to as FMANOVA model, and the simulation results obtained under it are depicted in Tables~\ref{Tab2} and \ref{Tab3} in the Appendix A.
-
-All testing procedures based on random projections for FMANOVA except the Rp test control the nominal type-I error rate. They show a tendency of conservativity in most scenarios, but this is natural for tests based on random projection as indicated by \cite{CAFB2010} and \cite{GoreckiSmaga2017}. The Pp (resp. LHp) test has the most conservative (resp. liberal) character. The standard version of the Rp test tends to be highly liberal for both methods of generating Gaussian processes. So, it is not comparable with the other tests. The permutation versions of all tests seem to behave better than the standard ones when the null hypothesis holds true, especially in the case of $t$~distribution.
-
-Since the standard Rp tests do not maintain the pre-assigned type-I error rate, we do not compare their empirical powers with those of the other testing procedures. For completeness, however, they are presented in tables containing the simulation results. With increasing sample sizes, the empirical powers of the tests generally increase. Usually the LHp tests are more powerful than the Wp tests, which outperform the Pp ones. The permutation version of the LHp (resp. Wp or Pp) test has generally slightly smaller (resp. greater) empirical powers than the standard one. In terms of power, the permutation Rp testing procedure behaves similarly to the permutation Wp and LHp tests. Moreover, observe that the tests based on random projections using Brownian motion have higher (resp. lower) empirical powers than those using Gaussian white noise when the functional data are less (resp. highly) correlated, i.e., $\rho=0.7,0.9$ (resp. $\rho=0.1,0.3$). For moderately correlated functional data ($\rho=0.5$), both methods of generating Gaussian processes behave very similar.
-
-\subsection{Simulation for FANOVA tests}
-\label{sec52}
-The comparison of the GPF, Fmaxb tests and the tests based on random projections with two methods of generating Gaussian processes is made by generating three discrete functional samples by using the model $x_{rs}(t)=\eta_r(t)+v_{rs}(t)$, $t\in[0,1]$, $r=1,2,3$, $s=1,\dots,n_r$, where the sample sizes are as in FMANOVA model and subject-effect functions $v_{rs}(t)$ are defined in the analogous way as in that model. We consider $\eta_r(t)=\mathbf{c}_1^{\top}(1,t,t^2,t^3)^{\top}$ for $r=1,2$ and $\eta_3(t)=(\mathbf{c}_1+2\delta\mathbf{u})^{\top}(1,t,t^2,t^3)^{\top}$, where $\mathbf{c}_1$, $\delta$ and $\mathbf{u}$ are as in FMANOVA model. This model will be referred to as FANOVA model. The simulation results are given in Table~\ref{Tab4} in the Appendix A.
-
-The GPF and Fmaxb tests keep the pre-assigned type-I error rate quite well, but the first one may be slightly liberal. The empirical sizes of the tests based on random projections are generally much lower than the nominal significance level. The tests based on ANOVA F~test statistic are usually more conservative than the other testing procedures based on random projections. Observe also that the tests based on random projections and using ATS and WTPS and Gaussian white noise may be slightly liberal for less correlated functional data.
-
-The conclusions about the empirical power of the tests based on random projections under two different methods of generating Gaussian processes are the same as in the multivariate case (see the last paragraph of Section \ref{sec51}). For very highly correlated functional data ($\rho=0.1$), the tests based on random projections using Gaussian white noise are the most powerful. When the functional data are a little less highly or moderately correlated ($\rho=0.3,0.5$), in terms of power, the best testing procedure is the Fmaxb method. Finally, for less correlated functional data ($\rho=0.7,0.9$), the GPF test and the tests based on random projections using Brownian motion outperform the remaining ones. Thus, there is not one method, which performs best, and the performance of the tests depends on the amount of correlation in functional data. Moreover, the tests based on random projections using different ANOVA methods do not perform equally well. It turns out that the tests based on random projections using ANOVA F~test statistic and ATS have the highest power for normally distributed data, perfoming slightly better than those based on WTPS. The reason for this is that these testing procedures are constructed under normality assumption, while the WTPS one is not. The situation changes in case of $t$~distribution. There the tests based on random projections using WTPS are usually the best ones.
-
-\section{Conclusions and future work}
-\label{sec6}
-Functional data analysis offers tools for solving statistical problems for high-dimensional data considered as curves or functions. An \proglang{R}~package \pkg{fdANOVA} implements a broad range of the analysis of variance testing procedures for univariate and multivariate functional data. The implemented tests are usually very different solutions to the FANOVA and FMANOVA problems. Since their performance may depend on specifics of the functional observations, the package gives the opportunity to choose the most appropriate test for specific real data. The article presents the empirical evaluation of size control and power of some tests that were not compared elsewhere, which, together with previous simulation results \citep[see, for example,][]{GoreckiSmaga2015, GoreckiSmaga2017}, may help in choosing appropriate procedures in practice. All the time consuming parts of the package are parallelized, which makes it relatively fast, given that most of the testing procedures are based on permutation, projection and resampling methods.
-
-When the testing procedures implemented in the \pkg{fdANOVA} package reject the null hypothesis about equality of group mean functions, it would be of interest to check which mean functions are significantly different and which are not. So, further developments of the package will include the implementation of post hoc and constrast analysis for functional data. Such testing procedures are considered, for instance, by \cite{Zhang2013}, who proposed the $L^2$-norm-based and $F$-type tests.
-
-\section*{Appendix A - Simulation results}
-The results of simulations described and discussed in Section~\ref{sec5} are depicted in Tables \ref{Tab2}--\ref{Tab4}.
-
-\begin{table}
-\begin{center}
-\begin{tabular}{llllrrrrrrrrr}
-\hline
-&&&&\multicolumn{4}{c}{GAUSS}&&\multicolumn{4}{c}{BM}\\\cline{5-8}\cline{10-13}
-Distribution&$\mathbf{n}$&$\rho$&V&\multicolumn{1}{c}{Wp}&\multicolumn{1}{c}{LHp}&\multicolumn{1}{c}{Pp}&\multicolumn{1}{c}{Rp}&&\multicolumn{1}{c}{Wp}&\multicolumn{1}{c}{LHp}&\multicolumn{1}{c}{Pp}&\multicolumn{1}{c}{Rp}\\\hline
-$N(0,1)$&$\mathbf{n}_1$&$0.1$&s&2.6&3.1&1.8&12.0&&3.2&3.5&2.7&12.0\\
-&&&p&3.0&2.5&2.7&2.3&&3.1&3.2&3.1&3.4\\
-&&$0.3$&s&2.5&4.0&1.5&13.4&&2.8&3.1&2.5&11.4\\
-&&&p&3.7&3.6&3.8&3.1&&2.7&2.6&3.2&2.3\\
-&&$0.5$&s&3.1&5.1&1.7&16.5&&3.0&3.2&2.2&11.4\\
-&&&p&4.3&3.8&4.7&3.7&&3.1&2.6&3.3&2.5\\
-&&$0.7$&s&4.1&6.1&2.6&18.5&&2.7&4.0&2.1&11.5\\
-&&&p&4.9&4.3&5.6&4.9&&2.8&2.8&3.1&2.7\\
-&&$0.9$&s&4.6&7.2&2.7&21.4&&3.5&4.2&2.0&11.3\\
-&&&p&6.3&5.9&5.9&6.3&&3.2&2.7&3.3&2.5\\
-&$\mathbf{n}_2$&$0.1$&s&1.9&2.2&1.6&9.2&&2.4&2.4&2.2&11.2\\
-&&&p&2.1&2.0&2.5&2.1&&2.5&2.4&2.3&2.3\\
-&&$0.3$&s&2.2&2.9&1.7&11.9&&2.4&2.6&2.0&11.7\\
-&&&p&3.5&3.4&3.3&3.9&&2.7&2.4&2.8&2.5\\
-&&$0.5$&s&3.4&3.9&2.8&14.4&&2.7&3.1&1.9&11.1\\
-&&&p&4.6&4.5&4.6&4.8&&2.9&3.0&3.2&2.7\\
-&&$0.7$&s&3.6&5.3&3.0&16.2&&2.9&3.6&1.9&11.4\\
-&&&p&6.2&6.0&6.0&5.5&&3.3&3.4&3.2&2.9\\
-&&$0.9$&s&4.4&5.9&2.8&20.3&&2.9&4.1&2.2&13.5\\
-&&&p&6.1&6.3&6.3&6.9&&3.6&3.7&3.9&3.6\\
-$t_4/\sqrt{2}$&$\mathbf{n}_1$&$0.1$&s&2.9&3.5&2.2&10.3&&2.5&3.1&1.9&9.2\\
-&&&p&3.7&3.9&3.7&3.8&&3.3&3.0&3.1&3.3\\
-&&$0.3$&s&3.5&4.2&2.4&12.3&&2.4&2.8&1.7&9.9\\
-&&&p&4.6&4.2&5.6&3.7&&3.1&3.2&3.3&3.1\\
-&&$0.5$&s&3.7&4.9&2.5&14.9&&2.6&3.1&1.9&9.3\\
-&&&p&5.8&5.8&5.8&4.5&&3.5&3.6&3.4&3.6\\
-&&$0.7$&s&3.8&5.8&1.9&16.4&&2.9&3.5&2.1&9.7\\
-&&&p&6.1&6.6&6.7&6.2&&3.6&3.9&4.0&3.8\\
-&&$0.9$&s&3.2&5.9&2.0&18.1&&3.0&4.2&2.3&11.0\\
-&&&p&5.3&5.6&5.8&6.4&&4.1&4.6&3.9&5.0\\
-&$\mathbf{n}_2$&$0.1$&s&3.1&3.6&2.3&11.6&&3.2&3.5&2.8&11.6\\
-&&&p&3.7&3.9&3.9&4.0&&3.7&3.8&3.7&3.7\\
-&&$0.3$&s&2.7&4.1&2.0&12.5&&3.2&3.8&2.8&10.5\\
-&&&p&4.0&4.4&4.4&4.4&&3.7&4.0&3.9&4.0\\
-&&$0.5$&s&3.3&4.5&2.4&14.8&&3.4&4.1&2.8&10.8\\
-&&&p&4.0&3.7&4.3&4.2&&4.1&4.1&4.6&4.1\\
-&&$0.7$&s&4.5&5.6&3.2&16.9&&3.4&4.5&2.5&11.9\\
-&&&p&4.8&4.8&4.7&5.0&&4.8&4.7&4.7&4.1\\
-&&$0.9$&s&5.0&6.1&3.3&18.2&&4.2&4.8&3.3&13.1\\
-&&&p&5.3&5.0&4.7&5.7&&5.0&5.1&5.0&4.7\\\hline
-\end{tabular}
-\end{center}
-\caption{Empirical sizes (as percentages) of the tests based on $k=30$ random projections obtained under FMANOVA model versus different methods of generating Gaussian processes (GAUSS and BM). In the column ``V'', ``s'' and ``p'' refer to the standard and permutation versions of the tests, respectively. Moreover, $\delta=0$, $M=50$, $\mathbf{n}_1=(10,10,10)$, $\mathbf{n}_2=(10,20,15)$, $nr=1000$, $nperm=1000$ and $\alpha=5\%$.}
-\label{Tab2}
-\end{table}
-
-\begin{table}
-\begin{center}
-\begin{tabular}{lllllccccccccc}
-\hline
-&&&&&\multicolumn{4}{c}{GAUSS}&&\multicolumn{4}{c}{BM}\\\cline{6-9}\cline{11-14}
-Distribution&$\mathbf{n}$&$\rho$&$\delta$&V&Wp&LHp&Pp&Rp&&Wp&LHp&Pp&Rp\\
-\hline
-$N(0,1)$&$\mathbf{n}_1$&$0.1$&0.12&s&53.2&58.3&43.6&74.4&&22.9&27.8&18.5&46.6\\
-&&&&p&54.1&54.8&51.8&55.0&&24.4&24.8&23.6&25.6\\
-&&$0.3$&0.30&s&43.2&50.8&33.9&70.0&&27.4&32.6&23.2&55.6\\
-&&&&p&45.3&46.2&42.4&45.9&&29.7&29.8&29.0&30.1\\
-&&$0.5$&0.45&s&33.5&39.6&22.8&62.2&&31.2&34.5&25.7&58.9\\
-&&&&p&35.1&36.7&34.0&36.0&&32.6&32.9&32.0&33.2\\
-&&$0.7$&0.80&s&51.9&60.0&39.4&80.2&&62.0&67.1&55.6&86.1\\
-&&&&p&53.0&52.8&50.8&52.5&&64.6&65.6&63.1&67.1\\
-&&$0.9$&1.20&s&56.4&65.2&41.0&86.1&&87.2&89.5&82.2&96.6\\
-&&&&p&55.7&56.7&53.9&57.2&&88.5&89.1&86.8&88.8\\
-&$\mathbf{n}_2$&$0.1$&0.12&s&77.9&80.5&72.0&91.2&&42.6&47.7&37.5&65.7\\
-&&&&p&78.6&79.1&77.5&79.1&&45.1&45.9&43.9&45.1\\
-&&$0.3$&0.30&s&68.3&72.5&63.6&89.3&&49.7&53.2&44.0&71.0\\
-&&&&p&70.4&71.0&68.8&70.8&&48.9&49.6&48.4&50.1\\
-&&$0.5$&0.45&s&54.3&58.8&48.4&81.6&&51.3&54.5&47.2&75.9\\
-&&&&p&58.5&59.3&57.9&59.1&&51.9&52.7&52.1&53.6\\
-&&$0.7$&0.80&s&79.0&83.8&73.5&95.4&&88.8&90.7&86.3&97.2\\
-&&&&p&81.2&81.9&80.3&81.2&&89.6&89.4&88.9&90.0\\
-&&$0.9$&1.20&s&83.1&87.1&77.4&96.9&&98.5&98.8&98.1&99.5\\
-&&&&p&83.7&84.1&82.6&85.5&&98.6&98.7&98.4&98.5\\
-$t_4/\sqrt{2}$&$\mathbf{n}_1$&$0.1$&0.12&s&57.2&62.9&47.9&77.7&&26.7&31.4&20.1&48.8\\
-&&&&p&61.4&61.2&58.0&62.0&&28.5&29.7&26.9&30.4\\
-&&$0.3$&0.30&s&45.8&51.5&34.2&72.4&&30.9&35.7&25.0&54.6\\
-&&&&p&51.7&51.6&48.8&52.0&&35.1&35.2&33.9&35.4\\
-&&$0.5$&0.45&s&33.5&40.5&24.9&65.5&&34.1&38.0&28.5&59.5\\
-&&&&p&41.6&42.2&39.4&41.3&&38.1&38.0&37.6&38.9\\
-&&$0.7$&0.80&s&57.6&64.6&45.1&83.5&&68.0&72.3&60.0&86.6\\
-&&&&p&61.4&62.0&58.7&62.4&&69.8&70.8&69.0&70.3\\
-&&$0.9$&1.20&s&61.4&68.7&47.5&86.5&&88.3&90.5&83.2&96.8\\
-&&&&p&63.8&65.3&61.4&65.4&&89.5&89.8&88.3&89.5\\
-&$\mathbf{n}_2$&$0.1$&0.12&s&79.1&82.3&73.8&90.3&&46.8&49.6&41.2&67.9\\
-&&&&p&81.0&81.7&80.2&82.3&&48.0&48.8&46.5&49.4\\
-&&$0.3$&0.30&s&72.8&77.4&67.5&88.5&&54.0&58.0&49.7&74.9\\
-&&&&p&76.5&76.5&75.6&76.8&&56.7&57.2&56.5&56.4\\
-&&$0.5$&0.45&s&59.1&63.6&52.4&82.9&&57.8&60.6&54.2&78.2\\
-&&&&p&63.3&64.3&62.3&66.3&&61.1&61.0&60.1&59.5\\
-&&$0.7$&0.80&s&80.1&84.6&75.9&94.4&&89.1&90.6&86.8&97.1\\
-&&&&p&83.1&83.4&82.5&83.4&&90.4&90.4&90.2&90.5\\
-&&$0.9$&1.20&s&84.3&87.8&78.8&96.7&&98.7&99.1&98.3&99.5\\
-&&&&p&86.5&86.6&85.7&86.9&&98.8&98.8&98.4&98.7\\\hline
-\end{tabular}
-\end{center}
-\caption{Empirical powers (as percentages) of the tests based on $k=30$ random projections obtained under FMANOVA model versus different methods of generating Gaussian processes (GAUSS and BM). In the column ``V'', ``s'' and ``p'' refer to the standard and permutation versions of the tests, respectively. Moreover, $\delta\neq 0$, $M=50$, $\mathbf{n}_1=(10,10,10)$, $\mathbf{n}_2=(10,20,15)$, $nr=1000$, $nperm=1000$ and $\alpha=5\%$.}
-\label{Tab3}
-\end{table}
-
-\begin{table}
-\begin{center}
-{\footnotesize
-\begin{tabular}{llllrrrrrrrrr}
-\hline
-&&&&&&\multicolumn{3}{c}{GAUSS}&&\multicolumn{3}{c}{BM}\\\cline{7-9}\cline{11-13}
-Distr.&$\mathbf{n}$&$\rho$&$\delta$&\multicolumn{1}{c}{GPF}&\multicolumn{1}{c}{Fmaxb}&\multicolumn{1}{c}{ANOVA}&\multicolumn{1}{c}{ATS}&\multicolumn{1}{c}{WTPS}&&\multicolumn{1}{c}{ANOVA}&\multicolumn{1}{c}{ATS}&\multicolumn{1}{c}{WTPS}\\
-\hline
-$N(0,1)$&$\mathbf{n}_1$&$0.1$&0&6.3&5.2&2.7&3.3&3.2&&3.4&4.5&3.4\\
-&&$0.3$&0&7.1&5.1&2.4&3.1&3.6&&3.0&3.8&3.0\\
-&&$0.5$&0&7.6&5.2&2.9&3.6&4.5&&3.2&3.6&3.0\\
-&&$0.7$&0&6.0&5.2&3.7&4.9&4.9&&2.7&3.0&3.7\\
-&&$0.9$&0&4.8&5.8&5.1&6.2&5.6&&3.0&3.8&3.4\\
-&&$0.1$&0.12&21.6&50.8&67.0&69.9&62.5&&35.2&38.0&33.3\\
-&&$0.3$&0.30&42.2&71.3&55.6&60.1&52.2&&39.7&43.7&36.6\\
-&&$0.5$&0.45&53.0&64.0&43.3&47.1&39.7&&43.1&46.4&40.3\\
-&&$0.7$&0.80&81.6&79.2&64.3&69.0&62.0&&77.0&79.9&72.7\\
-&&$0.9$&1.20&89.0&72.7&69.4&73.7&64.6&&94.1&95.2&92.4\\\cmidrule[0pt]{1-2}
-&$\mathbf{n}_2$&$0.1$&0&5.8&4.9&3.5&4.6&3.5&&3.4&4.5&3.2\\
-&&$0.3$&0&6.3&5.3&4.3&4.7&3.6&&3.1&4.4&3.0\\
-&&$0.5$&0&7.1&4.8&5.1&5.3&4.0&&3.5&4.3&3.3\\
-&&$0.7$&0&6.5&5.5&4.2&6.8&6.4&&2.7&3.4&3.7\\
-&&$0.9$&0&5.9&6.7&4.7&6.9&4.9&&4.5&5.2&3.6\\
-&&$0.1$&0.12&31.0&75.0&85.3&82.8&82.3&&57.0&53.5&52.1\\
-&&$0.3$&0.30&59.2&93.4&80.8&77.5&75.7&&60.4&59.3&58.2\\
-&&$0.5$&0.45&71.3&89.0&69.8&66.5&63.7&&65.2&62.8&61.7\\
-&&$0.7$&0.80&95.2&96.0&87.5&84.8&84.0&&94.1&93.1&92.3\\
-&&$0.9$&1.20&98.9&93.4&91.9&89.2&88.1&&99.2&98.9&98.8\\\cmidrule[0pt]{1-2}
-$\frac{t_4}{\sqrt{2}}$&$\mathbf{n}_1$&$0.1$&0&5.7&3.7&2.1&2.1&2.6&&2.6&2.6&3.3\\
-&&$0.3$&0&5.4&3.9&1.8&2.0&3.7&&1.9&2.5&3.3\\
-&&$0.5$&0&4.7&3.7&2.0&2.2&3.2&&1.7&2.0&2.7\\
-&&$0.7$&0&4.3&3.5&2.3&3.4&4.2&&2.0&2.6&2.9\\
-&&$0.9$&0&3.4&3.6&3.5&4.6&5.3&&2.0&2.6&2.8\\
-&&$0.1$&0.12&25.6&58.9&72.9&73.5&74.5&&
-40.3&42.1&42.1\\
-&&$0.3$&0.30&45.3&74.6&58.9&61.3&60.9&&43.0&44.0&46.1\\
-&&$0.5$&0.45&54.2&68.7&48.9&50.6&51.1&&46.0&46.9&49.1\\
-&&$0.7$&0.80&82.6&80.5&69.8&73.2&70.0&&80.2&81.2&81.5\\
-&&$0.9$&1.20&87.8&74.5&73.7&74.1&73.2&&93.2&93.0&93.8\\\cmidrule[0pt]{1-2}
-&$\mathbf{n}_2$&$0.1$&0&6.5&5.5&2.5&2.6&3.5&&3.1&3.4&2.9\\
-&&$0.3$&0&6.2&5.8&2.5&2.9&3.6&&2.5&2.7&2.6\\
-&&$0.5$&0&6.5&5.3&3.8&4.3&4.0&&2.6&2.7&3.1\\
-&&$0.7$&0&6.3&5.0&3.7&5.8&4.9&&2.4&2.9&3.3\\
-&&$0.9$&0&5.9&5.9&4.5&6.1&5.3&&2.2&3.1&3.6\\
-&&$0.1$&0.12&34.6&76.0&86.7&83.3&85.7&&58.5&52.0&57.9\\
-&&$0.3$&0.30&62.9&92.3&84.4&79.7&83.5&&67.2&63.8&65.9\\
-&&$0.5$&0.45&72.9&89.6&73.6&69.9&73.6&&69.9&66.8&71.2\\
-&&$0.7$&0.80&94.9&96.4&89.6&86.1&89.0&&94.4&92.5&94.6\\
-&&$0.9$&1.20&98.1&94.7&91.6&89.1&90.6&&99.2&98.0&99.1\\
-\hline
-\end{tabular}}
-\end{center}
-\caption{Empirical sizes ($\delta=0$) and powers ($\delta\neq 0$), as percentages, of the GPF and Fmaxb tests and the tests based on $k=30$ random projections with two methods of generating Gaussian processes (GAUSS and BM) obtained under FANOVA model. Moreover, $M=50$, $\mathbf{n}_1=(10,10,10)$, $\mathbf{n}_2=(10,20,15)$, $nr=1000$, $nboot = 10{,}000$, $nperm=1000$ and $\alpha=5\%$.}
-\label{Tab4}
-\end{table}
+\newpage
 
 \bibliography{fdANOVA}
 %\bibliographystyle{jss}
