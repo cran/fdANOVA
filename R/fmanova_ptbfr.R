@@ -3,7 +3,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                          basis = c("Fourier", "b-spline", "own"),
                          own.basis, own.cross.prod.mat,
                          criterion = c("BIC", "eBIC", "AIC", "AICc", "NO"),
-                         method = c("mode", "min", "max", "mean"),
+                         commonK = c("mode", "min", "max", "mean"),
                          minK = NULL, maxK = NULL, norder = 4, gamma.eBIC = 0.5){
   group.label0 = unique(group.label)
   l = length(group.label0)
@@ -13,7 +13,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
   basis = match.arg(basis)
   if(B < 1){ stop("invalid number of permutations (B)") }
   criterion = match.arg(criterion)
-  method = match.arg(method)
+  commonK = match.arg(commonK)
   if(any(is.na(group.label))){ stop("argument group.label can not contain NA values") }
   if((gamma.eBIC < 0)|(gamma.eBIC > 1)){ stop("argument gamma.eBIC must belong to [0,1]") }
   if(!parallel){
@@ -92,13 +92,13 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
           }
           K = numeric(n)
           for(jj in 1:n) K[jj] = 2*which(v[jj,] == min(v[jj,])) + minK - 2
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(K))
             KK[j] = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ KK[j] = min(K) }
-          if(method == "max"){ KK[j] = max(K) }
-          if(method == "mean"){ if(floor(mean(K)) %% 2 == 1){ KK[j] = floor(mean(K)) }else{ KK[j] = floor(mean(K))-1 } }
+          if(commonK == "min"){ KK[j] = min(K) }
+          if(commonK == "max"){ KK[j] = max(K) }
+          if(commonK == "mean"){ if(floor(mean(K)) %% 2 == 1){ KK[j] = floor(mean(K)) }else{ KK[j] = floor(mean(K))-1 } }
         }
       }else{
         if(length(int) != 2){ stop("argument int must be of length two") }
@@ -127,13 +127,13 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
           }
           K = numeric(n)
           for(jj in 1:n) K[jj] = 2*which(v[jj,] == min(v[jj,])) + minK - 2
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(K))
             KK[j] = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ KK[j] = min(K) }
-          if(method == "max"){ KK[j] = max(K) }
-          if(method == "mean"){ if(floor(mean(K)) %% 2 == 1){ KK[j] = floor(mean(K)) }else{ KK[j] = floor(mean(K))-1 } }
+          if(commonK == "min"){ KK[j] = min(K) }
+          if(commonK == "max"){ KK[j] = max(K) }
+          if(commonK == "mean"){ if(floor(mean(K)) %% 2 == 1){ KK[j] = floor(mean(K)) }else{ KK[j] = floor(mean(K))-1 } }
         }
       }
     }else{ KK = rep(maxK, p) }
@@ -272,13 +272,13 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
           }
           K = numeric(n)
           for(jj in 1:n) K[jj] = mmm[which(v[jj,] == min(v[jj,]))]
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(K))
             KK[j] = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ KK[j] = min(K) }
-          if(method == "max"){ KK[j] = max(K) }
-          if(method == "mean"){ KK[j] = floor(mean(K)) }
+          if(commonK == "min"){ KK[j] = min(K) }
+          if(commonK == "max"){ KK[j] = max(K) }
+          if(commonK == "mean"){ KK[j] = floor(mean(K)) }
         }
       }else{
         if(length(int) != 2){ stop("argument int must be of length two") }
@@ -307,13 +307,13 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
           }
           K = numeric(n)
           for(jj in 1:n) K[jj] = mmm[which(v[jj,] == min(v[jj,]))]
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(K))
             KK[j] = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ KK[j] = min(K) }
-          if(method == "max"){ KK[j] = max(K) }
-          if(method == "mean"){ KK[j] = floor(mean(K)) }
+          if(commonK == "min"){ KK[j] = min(K) }
+          if(commonK == "max"){ KK[j] = max(K) }
+          if(commonK == "mean"){ KK[j] = floor(mean(K)) }
         }
       }
     }else{ KK = rep(maxK, p) }
@@ -548,7 +548,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK,
                           gamma.eBIC = gamma.eBIC)
           }
@@ -557,7 +557,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK, norder = norder,
                           gamma.eBIC = gamma.eBIC)
           }
@@ -567,7 +567,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK)
           }
           if(basis == "b-spline"){
@@ -575,7 +575,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK, norder = norder)
           }
         }
@@ -586,7 +586,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, int = int, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK,
                           gamma.eBIC = gamma.eBIC)
           }
@@ -595,7 +595,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, int = int, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK, norder = norder,
                           gamma.eBIC = gamma.eBIC)
           }
@@ -605,7 +605,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, int = int, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK)
           }
           if(basis == "b-spline"){
@@ -613,7 +613,7 @@ fmanova.ptbfr = function(x = NULL, group.label, int, B = 1000,
                           P = P, pvalueP = pvalue.P, R = R, pvalueR = pvalue.R,
                           data = x, group.label = group.label, int = int, B = B,
                           parallel = parallel, nslaves = nslaves,
-                          basis = basis, criterion = criterion, method = method,
+                          basis = basis, criterion = criterion, commonK = commonK,
                           Km = KK, KM = KM, minK = minK, maxK = maxK, norder = norder)
           }
         }

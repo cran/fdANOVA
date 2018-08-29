@@ -26,7 +26,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
     SSE = SST - SSA
     return((n-a)*SSA/SSE/(a-1))
   }
-  
+
   ATS.simple = function(x, group.label){
     N = length(x); n = table(group.label); ng = length(as.vector(n))
     means = matrix(tapply(x, group.label, mean), ncol = 1)
@@ -39,7 +39,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
     f0 = sum(diag(MM %*% SN))^2/sum(diag(DM %*% DM %*% SN %*% SN %*% Delta))
     return(c(test.stat, 1 - pf(test.stat, f1, f0)))
   }
-  
+
   WTPSp = function(x, group.label, group.label0, n, n.i, l, perm.WTPS, nrTRP){
     means = matrix(0, nrow = l, ncol = 1); variances = numeric(l)
     for(i in 1:l){
@@ -129,8 +129,8 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
         }
       }
       if(criterion != "NO"){
-        if(is.null(params$paramFP$method)){ method = "mode" }else{ method = params$paramFP$method }
-        if(!(method %in% c("mode", "min", "max", "mean"))){ stop("argument params$paramFP$method must be one of the following: 'mode', 'min', 'max', 'mean'") }
+        if(is.null(params$paramFP$commonK)){ commonK = "mode" }else{ commonK = params$paramFP$commonK }
+        if(!(commonK %in% c("mode", "min", "max", "mean"))){ stop("argument params$paramFP$commonK must be one of the following: 'mode', 'min', 'max', 'mean'") }
         if((minK %% 2) == 0){ stop("the minimum number of basis functions (params$paramFP$minK) is even") }
         if(is.null(params$paramFP$int)){
           if(parallel.method == "parallel.method0"){
@@ -157,13 +157,13 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           }
           KK = numeric(n)
           for(j in 1:n) KK[j] = 2*which(v[j,] == min(v[j,])) + minK - 2
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(KK))
             K = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ K = min(KK) }
-          if(method == "max"){ K = max(KK) }
-          if(method == "mean"){ if(floor(mean(KK)) %% 2 == 1){ K = floor(mean(KK)) }else{ K = floor(mean(KK))-1 } }
+          if(commonK == "min"){ K = min(KK) }
+          if(commonK == "max"){ K = max(KK) }
+          if(commonK == "mean"){ if(floor(mean(KK)) %% 2 == 1){ K = floor(mean(KK)) }else{ K = floor(mean(KK))-1 } }
         }else{
           if(length(params$paramFP$int) != 2){ stop("argument params$paramFP$int must be of length two") }
           if(parallel.method == "parallel.method0"){
@@ -190,16 +190,16 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           }
           KK = numeric(n)
           for(j in 1:n) KK[j] = 2*which(v[j,] == min(v[j,])) + minK - 2
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(KK))
             K = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ K = min(KK) }
-          if(method == "max"){ K = max(KK) }
-          if(method == "mean"){ if(floor(mean(KK)) %% 2 == 1){ K = floor(mean(KK)) }else{ K = floor(mean(KK))-1 } }
+          if(commonK == "min"){ K = min(KK) }
+          if(commonK == "max"){ K = max(KK) }
+          if(commonK == "mean"){ if(floor(mean(KK)) %% 2 == 1){ K = floor(mean(KK)) }else{ K = floor(mean(KK))-1 } }
         }
       }else{ K = maxK }
-      
+
       if(is.null(params$paramFP$int)){
         fbasis = fda::create.fourier.basis(c(0, p), K)
         lfdata = vector("list", l)
@@ -218,7 +218,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           mfdata[, group.label == group.label0[i]] = lfdata[[i]]
         }
       }
-      
+
       a = 0; b = 0; c = 0
       for(i in 1:l){
         a = a + sum(t(lfdata[[i]]) %*% lfdata[[i]])/n.i[i]
@@ -278,8 +278,8 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
         }
       }
       if(criterion != "NO"){
-        if(is.null(params$paramFP$method)){ method = "mode" }else{ method = params$paramFP$method }
-        if(!(method %in% c("mode", "min", "max", "mean"))){ stop("argument params$paramFP$method must be one of the following: 'mode', 'min', 'max', 'mean'") }
+        if(is.null(params$paramFP$commonK)){ commonK = "mode" }else{ commonK = params$paramFP$commonK }
+        if(!(commonK %in% c("mode", "min", "max", "mean"))){ stop("argument params$paramFP$commonK must be one of the following: 'mode', 'min', 'max', 'mean'") }
         mmm = minK:maxK
         if(is.null(params$paramFP$int)){
           if(parallel.method == "parallel.method0"){
@@ -306,13 +306,13 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           }
           KK = numeric(n)
           for(j in 1:n) KK[j] = mmm[which(v[j,] == min(v[j,]))]
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(KK))
             K = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ K = min(KK) }
-          if(method == "max"){ K = max(KK) }
-          if(method == "mean"){ K = floor(mean(KK)) }
+          if(commonK == "min"){ K = min(KK) }
+          if(commonK == "max"){ K = max(KK) }
+          if(commonK == "mean"){ K = floor(mean(KK)) }
         }else{
           if(length(params$paramFP$int) != 2){ stop("argument params$paramFP$int must be of length two") }
           if(parallel.method == "parallel.method0"){
@@ -339,16 +339,16 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           }
           KK = numeric(n)
           for(j in 1:n) KK[j] = mmm[which(v[j,] == min(v[j,]))]
-          if(method == "mode"){
+          if(commonK == "mode"){
             temp = table(as.vector(KK))
             K = min(as.numeric(names(temp)[temp == max(temp)]))
           }
-          if(method == "min"){ K = min(KK) }
-          if(method == "max"){ K = max(KK) }
-          if(method == "mean"){ K = floor(mean(KK)) }
+          if(commonK == "min"){ K = min(KK) }
+          if(commonK == "max"){ K = max(KK) }
+          if(commonK == "mean"){ K = floor(mean(KK)) }
         }
       }else{ K = maxK }
-      
+
       if(is.null(params$paramFP$int)){
         fbasis = fda::create.bspline.basis(c(0, p), K, norder = norder)
         lfdata = vector("list", l)
@@ -367,7 +367,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
           mfdata[, group.label == group.label0[i]] = lfdata[[i]]
         }
       }
-      
+
       bspline.cross.prod.matrix = fda::inprod(fbasis, fbasis)
       a = 0; b = 0; c = 0
       for(i in 1:l){
@@ -409,11 +409,11 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
       if(n != length(group.label)){ stop("the number of observations is not equal to the number of elements in vector of labels") }
       lfdata = vector("list", l)
       for(i in 1:l){ lfdata[[i]] = mfdata[, group.label == group.label0[i]] }
-      
+
       own.cross.prod.mat = params$paramFP$own.cross.prod.mat
       if(K != nrow(own.cross.prod.mat)){ stop("invalid argument params$paramFP$own.cross.prod.mat") }
       if(K != ncol(own.cross.prod.mat)){ stop("invalid argument params$paramFP$own.cross.prod.mat") }
-      
+
       a = 0; b = 0; c = 0
       for(i in 1:l){
         a = a + sum(t(lfdata[[i]]) %*% own.cross.prod.mat %*% lfdata[[i]])/n.i[i]
@@ -470,33 +470,33 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
         if(is.null(params$paramFP$int)){
           if(criterion == "eBIC"){
             if(basis == "Fourier"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK, gamma.eBIC = gamma.eBIC)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK, gamma.eBIC = gamma.eBIC)
             }
             if(basis == "b-spline"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK, norder = norder, gamma.eBIC = gamma.eBIC)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK, norder = norder, gamma.eBIC = gamma.eBIC)
             }
           }else{
             if(basis == "Fourier"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK)
             }
             if(basis == "b-spline"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK, norder = norder)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK, norder = norder)
             }
           }
         }else{
           if(criterion == "eBIC"){
             if(basis == "Fourier"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK, gamma.eBIC = gamma.eBIC)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK, gamma.eBIC = gamma.eBIC)
             }
             if(basis == "b-spline"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK, norder = norder, gamma.eBIC = gamma.eBIC)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK, norder = norder, gamma.eBIC = gamma.eBIC)
             }
           }else{
             if(basis == "Fourier"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK)
             }
             if(basis == "b-spline"){
-              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, method = method, K = K, minK = minK, maxK = maxK, norder = norder)
+              resultFP = list(statFP = statFP, pvalueFP = pvalueFP, int = params$paramFP$int, B.FP = nrFP, basis = basis, criterion = criterion, commonK = commonK, K = K, minK = minK, maxK = maxK, norder = norder)
             }
           }
         }
@@ -604,7 +604,7 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
     A2N = A^2; B2N = B
     A2B = (n-l)*(n-l+1)/(n-l-1)/(n-l+2)*(A^2-2*B/(n-l+1))
     B2B = (n-l)^2/(n-l-1)/(n-l+2)*(B-A^2/(n-l))
-    
+
     if(any(c("L2N", "L2B", "L2b") %in% test)){
       statL2 = sum(SSR)
       if("L2N" %in% test){
@@ -772,201 +772,404 @@ fanova.tests = function(x = NULL, group.label, test = "ALL", params = NULL,
       resultFmaxb = list(statFmax = statFmax, pvalueFmaxb = pvalueFmaxb, paramFmaxb = nrFmaxb)
     }
     }
-  if("TRP" %in% test){
-    if(!("doBy" %in% rownames(installed.packages()))){
+  if ("TRP" %in% test) {
+    if (!("doBy" %in% rownames(installed.packages()))) {
       stop("Please install package 'doBY'")
     }
-    if(!("MASS" %in% rownames(installed.packages()))){
+    if (!("MASS" %in% rownames(installed.packages()))) {
       stop("Please install package 'MASS'")
     }
-    if(!("magic" %in% rownames(installed.packages()))){
+    if (!("magic" %in% rownames(installed.packages()))) {
       stop("Please install package 'magic'")
     }
-    x = as.matrix(x); n = ncol(x); p = nrow(x)
-    if(n != length(group.label)){
+    x <- as.matrix(x); n <- ncol(x); p <- nrow(x)
+    if (n != length(group.label)) {
       stop("number of observations (number of columns in x) and number of elements
            in vector of group labels (group.label) must be the same")
     }
-    if(is.null(params$paramTRP$projection)){ projection = "GAUSS" }else{ projection = params$paramTRP$projection }
-    if(!(projection %in% c("GAUSS", "BM"))){ stop("argument params$paramTRP$projection must be one of the following: 'GAUSS', 'BM'") }
-    if(is.null(params$paramTRP$permutation)){ permutationTRP = FALSE }else{ permutationTRP = params$paramTRP$permutation }
-    if(! is.logical(permutationTRP)){ stop("argument permutation is not logical (params$paramTRP$permutation)") }
-    if(is.null(params$paramTRP$B.TRP)){ nrTRP = 10000 }else{ nrTRP = params$paramTRP$B.TRP }
-    if(nrTRP < 1){ stop("invalid number of permutations (params$paramTRP$B.TRP)") }
-    if(is.null(params$paramTRP$k)){ k = 30 }else{ k = params$paramTRP$k }
-    if(any(k < 1)){ stop("invalid number of projections (k)") }
-    pvalues.anova = numeric(length(k))
-    pvalues.ATS.simple = numeric(length(k))
-    pvalues.WTPS = numeric(length(k))
-    all.data.proj = list()
-    iik = 0
-    modulo = function(z){ sqrt(sum(z^2)) }
-    for(ik in k){
-      ik.data.proj = matrix(0, nrow = n, ncol = ik)
-      if(projection == "GAUSS"){
-        z = matrix(rnorm(p * ik), nrow = ik, ncol = p)
-        modu = apply(z, 1, modulo)
-        z = z/modu
-        if(parallel.method == "parallel.method0"){
-          anova.p = numeric(ik)
-          ATS.simple.p = numeric(ik)
-          WTPS.p = numeric(ik)
-          for(j in 1:ik){
-            ik.data.proj[, j] = t(x) %*% z[j,]
-            data.proj = ik.data.proj[, j]
-            perm.WTPS = matrix(0, nrow = n, ncol = nrTRP)
-            for(i.perm in 1:nrTRP){
-              perm.WTPS[, i.perm] = sample(1:n)
-            }
-            WTPS.p[j] = WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
-            if(permutationTRP == FALSE){
-              anova.p[j] = 1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l)
-              ATS.simple.p[j] = ATS.simple(data.proj, group.label)[2]
-            }else{
-              anova.s = anova.statistic.quick(data.proj, group.label)
-              ATS.simple.s = ATS.simple(data.proj, group.label)[1]
-              anova.perm = numeric(nrTRP)
-              ATS.simple.perm = numeric(nrTRP)
+    if (is.null(params$paramTRP$projection)) {
+      projection <- "GAUSS"
+    }else{
+      projection <- params$paramTRP$projection
+    }
+    if (!(projection %in% c("GAUSS", "BM"))) {
+      stop("argument params$paramTRP$projection must be one of the following: 'GAUSS', 'BM'")
+    }
+    if (is.null(params$paramTRP$permutation)) {
+      permutationTRP <- FALSE
+    }else{
+      permutationTRP <- params$paramTRP$permutation
+    }
+    if (! is.logical(permutationTRP)) {
+      stop("argument permutation is not logical (params$paramTRP$permutation)")
+    }
+    if (is.null(params$paramTRP$independent.projection.tests)) {
+      independent.projection.tests <- TRUE
+    }else{
+      independent.projection.tests <- params$paramTRP$independent.projection.tests
+    }
+    if (! is.logical(independent.projection.tests)) {
+      stop("argument independent.projection.tests is not logical
+           (params$paramTRP$independent.projection.tests)")
+    }
+    if (is.null(params$paramTRP$B.TRP)) {
+      nrTRP <- 10000
+    }else{
+      nrTRP <- params$paramTRP$B.TRP
+    }
+    if (nrTRP < 1) {
+      stop("invalid number of permutations (params$paramTRP$B.TRP)")
+    }
+    if (is.null(params$paramTRP$k)) {
+      k <- 30
+    }else{
+      k <- params$paramTRP$k
+    }
+    if (any(k < 1)) {
+      stop("invalid number of projections (k)")
+    }
+    pvalues.anova <- numeric(length(k))
+    pvalues.ATS.simple <- numeric(length(k))
+    pvalues.WTPS <- numeric(length(k))
+    modulo <- function(z){ sqrt(sum(z^2)) }
+    if (independent.projection.tests) {
+      all.data.proj <- list()
+      iik <- 0
+      for(ik in k){
+        ik.data.proj <- matrix(0, nrow = n, ncol = ik)
+        if(projection == "GAUSS"){
+          z <- matrix(rnorm(p * ik), nrow = ik, ncol = p)
+          modu <- apply(z, 1, modulo)
+          z <- z/modu
+          if(parallel.method == "parallel.method0"){
+            anova.p <- numeric(ik)
+            ATS.simple.p <- numeric(ik)
+            WTPS.p <- numeric(ik)
+            for(j in 1:ik){
+              ik.data.proj[, j] <- t(x) %*% z[j,]
+              data.proj <- ik.data.proj[, j]
+              perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
               for(i.perm in 1:nrTRP){
-                anova.perm[i.perm] = anova.statistic.quick(data.proj, sample(group.label))
-                ATS.simple.perm[i.perm] = ATS.simple(data.proj, sample(group.label))[1]
+                perm.WTPS[, i.perm] <- sample(1:n)
               }
-              anova.p[j] = mean(anova.perm >= anova.s)
-              ATS.simple.p[j] = mean(ATS.simple.perm >= ATS.simple.s)
+              WTPS.p[j] <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+              if(permutationTRP == FALSE){
+                anova.p[j] <- 1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l)
+                ATS.simple.p[j] <- ATS.simple(data.proj, group.label)[2]
+              }else{
+                anova.s <- anova.statistic.quick(data.proj, group.label)
+                ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+                anova.perm <- numeric(nrTRP)
+                ATS.simple.perm <- numeric(nrTRP)
+                for(i.perm in 1:nrTRP){
+                  anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                  ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
+                }
+                anova.p[j] <- mean(anova.perm >= anova.s)
+                ATS.simple.p[j] <- mean(ATS.simple.perm >= ATS.simple.s)
+              }
+            }
+            iik <- iik + 1
+            all.data.proj[[iik]] <- ik.data.proj
+            pvalues.anova[iik] <- min(ik*anova.p[order(anova.p)]/1:ik)
+            pvalues.ATS.simple[iik] <- min(ik*ATS.simple.p[order(ATS.simple.p)]/1:ik)
+            pvalues.WTPS[iik] <- min(ik*WTPS.p[order(WTPS.p)]/1:ik)
+          }
+          if(parallel.method == "parallel.method1"){
+            rs <- foreach(j = 1:ik, .combine = rbind) %dopar%
+            {
+              ik.data.proj[, j] <- t(x) %*% z[j,]
+              data.proj <- ik.data.proj[, j]
+              perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
+              for(i.perm in 1:nrTRP){
+                perm.WTPS[, i.perm] <- sample(1:n)
+              }
+              WTPS.p <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+              if(permutationTRP == FALSE){
+                c(1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l),
+                  ATS.simple(data.proj, group.label)[2], WTPS.p, data.proj)
+              }else{
+                anova.s <- anova.statistic.quick(data.proj, group.label)
+                ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+                anova.perm <- numeric(nrTRP)
+                ATS.simple.perm <- numeric(nrTRP)
+                for(i.perm in 1:nrTRP){
+                  anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                  ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
+                }
+                c(mean(anova.perm >= anova.s),
+                  mean(ATS.simple.perm >= ATS.simple.s), WTPS.p, data.proj)
+              }
+            }
+            if(ik == 1) rs <- matrix(rs, nrow = 1, ncol = n+3)
+            iik <- iik + 1
+            if(ik == 1){
+              all.data.proj[[iik]] <- matrix(rs[, 4:(n+3)], ncol = 1)
+            }else{
+              all.data.proj[[iik]] <- t(rs[, 4:(n+3)])
+            }
+            pvalues.anova[iik] <- min(ik*(rs[, 1])[order(rs[, 1])]/1:ik)
+            pvalues.ATS.simple[iik] <- min(ik*(rs[, 2])[order(rs[, 2])]/1:ik)
+            pvalues.WTPS[iik] <- min(ik*(rs[, 3])[order(rs[, 3])]/1:ik)
+          }
+        }else{
+          if(parallel.method == "parallel.method0"){
+            anova.p <- numeric(ik)
+            ATS.simple.p <- numeric(ik)
+            WTPS.p <- numeric(ik)
+            for(j in 1:ik){
+              bm.p <- cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
+              bm.p <- bm.p/modulo(bm.p)
+              ik.data.proj[, j] <- t(x) %*% as.matrix(bm.p)
+              data.proj <- ik.data.proj[, j]
+              perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
+              for(i.perm in 1:nrTRP){
+                perm.WTPS[, i.perm] <- sample(1:n)
+              }
+              WTPS.p[j] <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+              if(permutationTRP == FALSE){
+                anova.p[j] <- 1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l)
+                ATS.simple.p[j] <- ATS.simple(data.proj, group.label)[2]
+              }else{
+                anova.s <- anova.statistic.quick(data.proj, group.label)
+                ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+                anova.perm <- numeric(nrTRP)
+                ATS.simple.perm <- numeric(nrTRP)
+                for(i.perm in 1:nrTRP){
+                  anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                  ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
+                }
+                anova.p[j] <- mean(anova.perm >= anova.s)
+                ATS.simple.p[j] <- mean(ATS.simple.perm >= ATS.simple.s)
+              }
+            }
+            iik <- iik + 1
+            all.data.proj[[iik]] <- ik.data.proj
+            pvalues.anova[iik] <- min(ik*anova.p[order(anova.p)]/1:ik)
+            pvalues.ATS.simple[iik] <- min(ik*ATS.simple.p[order(ATS.simple.p)]/1:ik)
+            pvalues.WTPS[iik] <- min(ik*WTPS.p[order(WTPS.p)]/1:ik)
+          }
+          if(parallel.method == "parallel.method1"){
+            rs <- foreach(j = 1:ik, .combine = rbind) %dopar%
+            {
+              bm.p <- cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
+              bm.p <- bm.p/modulo(bm.p)
+              ik.data.proj[, j] <- t(x) %*% as.matrix(bm.p)
+              data.proj <- ik.data.proj[, j]
+              perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
+              for(i.perm in 1:nrTRP){
+                perm.WTPS[, i.perm] <- sample(1:n)
+              }
+              WTPS.p <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+              if(permutationTRP == FALSE){
+                c(1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l),
+                  ATS.simple(data.proj, group.label)[2], WTPS.p, data.proj)
+              }else{
+                anova.s <- anova.statistic.quick(data.proj, group.label)
+                ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+                anova.perm <- numeric(nrTRP)
+                ATS.simple.perm <- numeric(nrTRP)
+                for(i.perm in 1:nrTRP){
+                  anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                  ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
+                }
+                c(mean(anova.perm >= anova.s),
+                  mean(ATS.simple.perm >= ATS.simple.s), WTPS.p, data.proj)
+              }
+            }
+            if(ik == 1) rs <- matrix(rs, nrow = 1, ncol = n+3)
+            iik <- iik + 1
+            if(ik == 1){
+              all.data.proj[[iik]] <- matrix(rs[, 4:(n+3)], ncol = 1)
+            }else{
+              all.data.proj[[iik]] <- t(rs[, 4:(n+3)])
+            }
+            pvalues.anova[iik] <- min(ik*(rs[, 1])[order(rs[, 1])]/1:ik)
+            pvalues.ATS.simple[iik] <- min(ik*(rs[, 2])[order(rs[, 2])]/1:ik)
+            pvalues.WTPS[iik] <- min(ik*(rs[, 3])[order(rs[, 3])]/1:ik)
+          }
+        }
+      }
+    }else{
+      ik <- max(k)
+      ik.data.proj <- matrix(0, nrow = n, ncol = ik)
+      if (projection == "GAUSS") {
+        z <- matrix(rnorm(p * ik), nrow = ik, ncol = p)
+        modu <- apply(z, 1, modulo)
+        z <- z/modu
+        if(parallel.method == "parallel.method0"){
+          anova.p <- numeric(ik)
+          ATS.simple.p <- numeric(ik)
+          WTPS.p <- numeric(ik)
+          for(j in 1:ik){
+            ik.data.proj[, j] <- t(x) %*% z[j,]
+            data.proj <- ik.data.proj[, j]
+            perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
+            for(i.perm in 1:nrTRP){
+              perm.WTPS[, i.perm] <- sample(1:n)
+            }
+            WTPS.p[j] <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+            if(permutationTRP == FALSE){
+              anova.p[j] <- 1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l)
+              ATS.simple.p[j] <- ATS.simple(data.proj, group.label)[2]
+            }else{
+              anova.s <- anova.statistic.quick(data.proj, group.label)
+              ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+              anova.perm <- numeric(nrTRP)
+              ATS.simple.perm <- numeric(nrTRP)
+              for(i.perm in 1:nrTRP){
+                anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
+              }
+              anova.p[j] <- mean(anova.perm >= anova.s)
+              ATS.simple.p[j] <- mean(ATS.simple.perm >= ATS.simple.s)
             }
           }
-          iik = iik + 1
-          all.data.proj[[iik]] = ik.data.proj
-          pvalues.anova[iik] = min(ik*anova.p[order(anova.p)]/1:ik)
-          pvalues.ATS.simple[iik] = min(ik*ATS.simple.p[order(ATS.simple.p)]/1:ik)
-          pvalues.WTPS[iik] = min(ik*WTPS.p[order(WTPS.p)]/1:ik)
+          all.data.proj <- ik.data.proj
+          iik <- 0
+          for (ik in k) {
+            iik <- iik + 1
+            pvalues.anova[iik] <- min(ik * anova.p[1:ik][order(anova.p[1:ik])] / 1:ik)
+            pvalues.ATS.simple[iik] <- min(ik * ATS.simple.p[1:ik][order(ATS.simple.p[1:ik])] / 1:ik)
+            pvalues.WTPS[iik] <- min(ik * WTPS.p[1:ik][order(WTPS.p[1:ik])] / 1:ik)
+          }
         }
         if(parallel.method == "parallel.method1"){
-          rs = foreach(j = 1:ik, .combine = rbind) %dopar%
+          rs <- foreach(j = 1:ik, .combine = rbind) %dopar%
           {
-            ik.data.proj[, j] = t(x) %*% z[j,]
-            data.proj = ik.data.proj[, j]
-            perm.WTPS = matrix(0, nrow = n, ncol = nrTRP)
+            ik.data.proj[, j] <- t(x) %*% z[j,]
+            data.proj <- ik.data.proj[, j]
+            perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
             for(i.perm in 1:nrTRP){
-              perm.WTPS[, i.perm] = sample(1:n)
+              perm.WTPS[, i.perm] <- sample(1:n)
             }
-            WTPS.p = WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+            WTPS.p <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
             if(permutationTRP == FALSE){
               c(1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l),
                 ATS.simple(data.proj, group.label)[2], WTPS.p, data.proj)
             }else{
-              anova.s = anova.statistic.quick(data.proj, group.label)
-              ATS.simple.s = ATS.simple(data.proj, group.label)[1]
-              anova.perm = numeric(nrTRP)
-              ATS.simple.perm = numeric(nrTRP)
+              anova.s <- anova.statistic.quick(data.proj, group.label)
+              ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+              anova.perm <- numeric(nrTRP)
+              ATS.simple.perm <- numeric(nrTRP)
               for(i.perm in 1:nrTRP){
-                anova.perm[i.perm] = anova.statistic.quick(data.proj, sample(group.label))
-                ATS.simple.perm[i.perm] = ATS.simple(data.proj, sample(group.label))[1]
+                anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
               }
               c(mean(anova.perm >= anova.s),
                 mean(ATS.simple.perm >= ATS.simple.s), WTPS.p, data.proj)
             }
           }
-          if(ik == 1) rs = matrix(rs, nrow = 1, ncol = n+3)
-          iik = iik + 1
-          if(ik == 1){
-            all.data.proj[[iik]] = matrix(rs[, 4:(n+3)], ncol = 1)
-          }else{
-            all.data.proj[[iik]] = t(rs[, 4:(n+3)])
+          if (ik == 1) rs <- matrix(rs, nrow = 1, ncol = n+3)
+          if (ik == 1) {
+            all.data.proj <- matrix(rs[, 4:(n+3)], ncol = 1)
+          } else {
+            all.data.proj <- t(rs[, 4:(n+3)])
           }
-          pvalues.anova[iik] = min(ik*(rs[, 1])[order(rs[, 1])]/1:ik)
-          pvalues.ATS.simple[iik] = min(ik*(rs[, 2])[order(rs[, 2])]/1:ik)
-          pvalues.WTPS[iik] = min(ik*(rs[, 3])[order(rs[, 3])]/1:ik)
+          iik <- 0
+          for (ik in k) {
+            iik <- iik + 1
+            pvalues.anova[iik] <- min(ik * (rs[1:ik, 1])[order(rs[1:ik, 1])] / 1:ik)
+            pvalues.ATS.simple[iik] <- min(ik * (rs[1:ik, 2])[order(rs[1:ik, 2])] / 1:ik)
+            pvalues.WTPS[iik] <- min(ik * (rs[1:ik, 3])[order(rs[1:ik, 3])] / 1:ik)
+          }
         }
-      }else{
+      } else {
         if(parallel.method == "parallel.method0"){
-          anova.p = numeric(ik)
-          ATS.simple.p = numeric(ik)
-          WTPS.p = numeric(ik)
+          anova.p <- numeric(ik)
+          ATS.simple.p <- numeric(ik)
+          WTPS.p <- numeric(ik)
           for(j in 1:ik){
-            bm.p = cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
-            bm.p = bm.p/modulo(bm.p)
-            ik.data.proj[, j] = t(x) %*% as.matrix(bm.p)
-            data.proj = ik.data.proj[, j]
-            perm.WTPS = matrix(0, nrow = n, ncol = nrTRP)
+            bm.p <- cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
+            bm.p <- bm.p/modulo(bm.p)
+            ik.data.proj[, j] <- t(x) %*% as.matrix(bm.p)
+            data.proj <- ik.data.proj[, j]
+            perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
             for(i.perm in 1:nrTRP){
-              perm.WTPS[, i.perm] = sample(1:n)
+              perm.WTPS[, i.perm] <- sample(1:n)
             }
-            WTPS.p[j] = WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+            WTPS.p[j] <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
             if(permutationTRP == FALSE){
-              anova.p[j] = 1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l)
-              ATS.simple.p[j] = ATS.simple(data.proj, group.label)[2]
+              anova.p[j] <- 1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l)
+              ATS.simple.p[j] <- ATS.simple(data.proj, group.label)[2]
             }else{
-              anova.s = anova.statistic.quick(data.proj, group.label)
-              ATS.simple.s = ATS.simple(data.proj, group.label)[1]
-              anova.perm = numeric(nrTRP)
-              ATS.simple.perm = numeric(nrTRP)
+              anova.s <- anova.statistic.quick(data.proj, group.label)
+              ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+              anova.perm <- numeric(nrTRP)
+              ATS.simple.perm <- numeric(nrTRP)
               for(i.perm in 1:nrTRP){
-                anova.perm[i.perm] = anova.statistic.quick(data.proj, sample(group.label))
-                ATS.simple.perm[i.perm] = ATS.simple(data.proj, sample(group.label))[1]
+                anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
               }
-              anova.p[j] = mean(anova.perm >= anova.s)
-              ATS.simple.p[j] = mean(ATS.simple.perm >= ATS.simple.s)
+              anova.p[j] <- mean(anova.perm >= anova.s)
+              ATS.simple.p[j] <- mean(ATS.simple.perm >= ATS.simple.s)
             }
           }
-          iik = iik + 1
-          all.data.proj[[iik]] = ik.data.proj
-          pvalues.anova[iik] = min(ik*anova.p[order(anova.p)]/1:ik)
-          pvalues.ATS.simple[iik] = min(ik*ATS.simple.p[order(ATS.simple.p)]/1:ik)
-          pvalues.WTPS[iik] = min(ik*WTPS.p[order(WTPS.p)]/1:ik)
+          all.data.proj <- ik.data.proj
+          iik <- 0
+          for (ik in k) {
+            iik <- iik + 1
+            pvalues.anova[iik] <- min(ik * anova.p[1:ik][order(anova.p[1:ik])] / 1:ik)
+            pvalues.ATS.simple[iik] <- min(ik * ATS.simple.p[1:ik][order(ATS.simple.p[1:ik])] / 1:ik)
+            pvalues.WTPS[iik] <- min(ik * WTPS.p[1:ik][order(WTPS.p[1:ik])] / 1:ik)
+          }
         }
         if(parallel.method == "parallel.method1"){
-          rs = foreach(j = 1:ik, .combine = rbind) %dopar%
+          rs <- foreach(j = 1:ik, .combine = rbind) %dopar%
           {
-            bm.p = cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
-            bm.p = bm.p/modulo(bm.p)
-            ik.data.proj[, j] = t(x) %*% as.matrix(bm.p)
-            data.proj = ik.data.proj[, j]
-            perm.WTPS = matrix(0, nrow = n, ncol = nrTRP)
+            bm.p <- cumsum(rnorm(p, mean = 0, sd = 1))/sqrt(p)
+            bm.p <- bm.p/modulo(bm.p)
+            ik.data.proj[, j] <- t(x) %*% as.matrix(bm.p)
+            data.proj <- ik.data.proj[, j]
+            perm.WTPS <- matrix(0, nrow = n, ncol = nrTRP)
             for(i.perm in 1:nrTRP){
-              perm.WTPS[, i.perm] = sample(1:n)
+              perm.WTPS[, i.perm] <- sample(1:n)
             }
-            WTPS.p = WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
+            WTPS.p <- WTPSp(data.proj, group.label, group.label0, n, n.i, l, perm.WTPS = perm.WTPS, nrTRP)
             if(permutationTRP == FALSE){
               c(1-pf(anova.statistic.quick(data.proj, group.label), l-1, n-l),
                 ATS.simple(data.proj, group.label)[2], WTPS.p, data.proj)
             }else{
-              anova.s = anova.statistic.quick(data.proj, group.label)
-              ATS.simple.s = ATS.simple(data.proj, group.label)[1]
-              anova.perm = numeric(nrTRP)
-              ATS.simple.perm = numeric(nrTRP)
+              anova.s <- anova.statistic.quick(data.proj, group.label)
+              ATS.simple.s <- ATS.simple(data.proj, group.label)[1]
+              anova.perm <- numeric(nrTRP)
+              ATS.simple.perm <- numeric(nrTRP)
               for(i.perm in 1:nrTRP){
-                anova.perm[i.perm] = anova.statistic.quick(data.proj, sample(group.label))
-                ATS.simple.perm[i.perm] = ATS.simple(data.proj, sample(group.label))[1]
+                anova.perm[i.perm] <- anova.statistic.quick(data.proj, sample(group.label))
+                ATS.simple.perm[i.perm] <- ATS.simple(data.proj, sample(group.label))[1]
               }
               c(mean(anova.perm >= anova.s),
                 mean(ATS.simple.perm >= ATS.simple.s), WTPS.p, data.proj)
             }
           }
-          if(ik == 1) rs = matrix(rs, nrow = 1, ncol = n+3)
-          iik = iik + 1
-          if(ik == 1){
-            all.data.proj[[iik]] = matrix(rs[, 4:(n+3)], ncol = 1)
-          }else{
-            all.data.proj[[iik]] = t(rs[, 4:(n+3)])
+          if (ik == 1) rs <- matrix(rs, nrow = 1, ncol = n+3)
+          if (ik == 1) {
+            all.data.proj <- matrix(rs[, 4:(n+3)], ncol = 1)
+          } else {
+            all.data.proj <- t(rs[, 4:(n+3)])
           }
-          pvalues.anova[iik] = min(ik*(rs[, 1])[order(rs[, 1])]/1:ik)
-          pvalues.ATS.simple[iik] = min(ik*(rs[, 2])[order(rs[, 2])]/1:ik)
-          pvalues.WTPS[iik] = min(ik*(rs[, 3])[order(rs[, 3])]/1:ik)
+          iik <- 0
+          for (ik in k) {
+            iik <- iik + 1
+            pvalues.anova[iik] <- min(ik * (rs[1:ik, 1])[order(rs[1:ik, 1])] / 1:ik)
+            pvalues.ATS.simple[iik] <- min(ik * (rs[1:ik, 2])[order(rs[1:ik, 2])] / 1:ik)
+            pvalues.WTPS[iik] <- min(ik * (rs[1:ik, 3])[order(rs[1:ik, 3])] / 1:ik)
+          }
         }
       }
     }
-    resultTRP = list(pvalues.anova = pvalues.anova, pvalues.ATS = pvalues.ATS.simple,
-                     pvalues.WTPS = pvalues.WTPS, data.projections = all.data.proj,
-                     k = k, projection = projection,
-                     permutation = permutationTRP, B.TRP = nrTRP)
+    resultTRP <- list(pvalues.anova = pvalues.anova, pvalues.ATS = pvalues.ATS.simple,
+                      pvalues.WTPS = pvalues.WTPS, data.projections = all.data.proj,
+                      k = k, projection = projection,
+                      permutation = permutationTRP, B.TRP = nrTRP,
+                      independent.projection.tests = independent.projection.tests)
     }
   if(any(c("FP", "CH", "CS", "L2b", "Fb", "Fmaxb", "TRP") %in% test)){
     if(parallel.method == "parallel.method1"){
       parallel::stopCluster(cl)
     }
   }
-  
+
   list.results = list()
   for(ii in test){
     if(ii == "FP"){

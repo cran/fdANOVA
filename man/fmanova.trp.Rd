@@ -15,6 +15,7 @@ The alternative is the negation of the null hypothesis. We assume that each func
 \usage{
 fmanova.trp(x, group.label, k = 30, projection = c("GAUSS", "BM"),
             permutation = FALSE, B = 1000,
+            independent.projection.tests = TRUE,
             parallel = FALSE, nslaves = NULL)
 }
 \arguments{
@@ -30,6 +31,8 @@ fmanova.trp(x, group.label, k = 30, projection = c("GAUSS", "BM"),
 }
 \item{B}{a number of permutation replicates.
 }
+\item{independent.projection.tests}{a logical indicating whether to generate the random projections independently or dependently for different elements of vector \code{k}. In the first case, the random projections for each element of vector \code{k} are generated separately, while in the second one, they are generated as chained subsets, e.g., for \code{k = c(5, 10)}, the first 5 projections are a subset of the last 10. The second way of generating random projections is faster than the first one.
+}
 \item{parallel}{a logical indicating whether to use parallelization.
 }
 \item{nslaves}{if \code{parallel = TRUE}, a number of slaves. Its default value means that it will be equal to a number of logical processes of a computer used.
@@ -38,7 +41,7 @@ fmanova.trp(x, group.label, k = 30, projection = c("GAUSS", "BM"),
 \value{
 A list with class "fmanovatrp" containing the following components (|\code{k}| denotes the length of vector \code{k}):
 \item{pvalues}{a \eqn{4\times} |\code{k}| matrix of p-values of the tests.}
-\item{data.projections}{a list of length |\code{k}|, whose elements are lists of \eqn{n\times p} matrices of projections of the observations,}
+\item{data.projections}{if \code{independent.projection.tests = TRUE}, a list of length |\code{k}|, whose elements are lists of \eqn{n\times p} matrices of projections of the observations, while when \code{independent.projection.tests = FALSE}, a list of length \eqn{\max}(\code{k}), whose elements are \eqn{n\times p} matrices of projections of the observations,}
 and the values of used parameters.
 }
 \references{

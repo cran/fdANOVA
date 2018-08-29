@@ -22,7 +22,7 @@ fanova.tests(x = NULL, group.label, test = "ALL",
 #                              basis = c("Fourier", "b-spline", "own"),
 #                              own.basis, own.cross.prod.mat,
 #                              criterion = c("BIC", "eBIC", "AIC", "AICc", "NO"),
-#                              method = c("mode", "min", "max", "mean"),
+#                              commonK = c("mode", "min", "max", "mean"),
 #                              minK = NULL, maxK = NULL, norder = 4, gamma.eBIC = 0.5)
 #               paramCH = 10000,
 #               paramCS = 10000,
@@ -30,14 +30,15 @@ fanova.tests(x = NULL, group.label, test = "ALL",
 #               paramFb = 10000,
 #               paramFmaxb = 10000,
 #               paramTRP = list(k = 30, projection = c("GAUSS", "BM"),
-#                               permutation = FALSE, B.TRP = 10000))
+#                               permutation = FALSE, B.TRP = 10000,
+#                               independent.projection.tests = TRUE))
 }
 \arguments{
 \item{x}{a \eqn{\mathcal{T}\times n} matrix of data, whose each column is a discretized version of a function and rows correspond to design time points. Its default values is \code{NULL}, since if the FP test is only used, we can give a basis representation of the data instead of raw observations (see the list \code{paramFP} below). For any of the other testing procedures, the raw data are needed.
 }
 \item{group.label}{a vector containing group labels.
 }
-\item{test}{a kind of indicator which establishes a choice of FANOVA tests to be performed. Its default value means that all testing procedures of Section 2.1 of the vignette file will be used. When we want to use only some tests, the parameter \code{test} is an appropriate subvector of the following vector of tests' labels \code{c("FP",} \code{"CH",} \code{"CS",} \code{"L2N",} \code{"L2B",} \code{"L2b",} \code{"FN",} \code{"FB",} \code{"Fb",} \code{"GPF",} \code{"Fmaxb",} \code{"TRP")}.
+\item{test}{a kind of indicator which establishes a choice of FANOVA tests to be performed. Its default value means that all testing procedures of Section 2.1 of the vignette file will be used. When we want to use only some tests, the parameter \code{test} is an appropriate subvector of the following vector of tests' labels \code{c("FP",} \code{"CH",} \code{"CS",} \code{"L2N",} \code{"L2B",} \code{"L2b",} \code{"FN",} \code{"FB",} \code{"Fb",} \code{"GPF",} \code{"Fmaxb",} \code{"TRP")}, where \code{"FP"} - permutation test based on basis function representation (Gorecki and Smaga, 2015); \code{"CH"} and \code{"CS"} - L2-norm-based parametric bootstrap tests for homoscedastic and heteroscedastic samples, respectively (Cuevas et al., 2004); \code{"L2N"} and \code{"L2B"} - L2-norm-based test with naive and bias-reduced method of estimation, respectively (Faraway, 1997; Zhang and Chen, 2007; Zhang, 2013); \code{"L2b"} - L2-norm-based bootstrap test (Zhang, 2013); \code{"FN"} and \code{"FB"} - F-type test with naive and bias-reduced method of estimation, respectively (Shen and Faraway, 2004; Zhang, 2011); \code{"Fb"} - F-type bootstrap test (Zhang, 2013); \code{"GPF"} - globalizing the pointwise F-test (Zhang and Liang, 2014); \code{"Fmaxb"} - Fmax bootstrap test (Zhang et al., 2018); \code{"TRP"} - tests based on random projections (Cuesta-Albertos and Febrero-Bande, 2010).
 }
 \item{params}{a list of additional parameters for the FP, CH, CS, L\eqn{^2}b, Fb, Fmaxb tests and the tests based on random projections. It can contain all or a part of the elements \code{paramFP}, \code{paramCH}, \code{paramCS}, \code{paramL2b}, \code{paramFb}, \code{paramFmaxb} and \code{paramTRP} for passing the parameters for the FP, CH, CS, L\eqn{^2}b, Fb, Fmaxb tests and tests based on random projections, respectively, to the function \code{fanova.tests}. They are described below. The default value of \code{params} means that these tests are performed with their default values.
 }
@@ -55,7 +56,7 @@ fanova.tests(x = NULL, group.label, test = "ALL",
 
 \code{criterion = "NO"} means that \eqn{K} is equal to the parameter \code{maxK} defined below. We have \deqn{\code{BIC}(X_{ij})=\mathcal{T}\log(\mathbf{e}_{ij}^{\top}\mathbf{e}_{ij}/\mathcal{T})+K\log\mathcal{T},} \deqn{\code{eBIC}(X_{ij})=\mathcal{T}\log(\mathbf{e}_{ij}^{\top}\mathbf{e}_{ij}/\mathcal{T})+K[\log\mathcal{T}+2\gamma\log(K_{\max})],} \deqn{\code{AIC}(X_{ij})=\mathcal{T}\log(\mathbf{e}_{ij}^{\top}\mathbf{e}_{ij}/\mathcal{T})+2K} and \deqn{\code{AICc}(X_{ij})=\code{AIC}(X_{ij})+2K(K + 1)/(n-K-1),} where \deqn{\mathbf{e}_{ij}=(e_{ij1},\dots,e_{ij\mathcal{T}})^{\top},} \deqn{e_{ijr}=X_{ij}(t_r)-\sum_{m=1}^K\hat{c}_{ijm}\varphi_m(t_r),} \eqn{t_1,\dots,t_{\mathcal{T}}} are the design time points, \eqn{\gamma\in[0,1]}, \eqn{K_{\max}} is a maximum \eqn{K} considered and \eqn{\log} denotes the natural logarithm.
 }
-\item{method}{a choice of method for selecting the common value for all observations from the values of \eqn{K} corresponding to all processes.
+\item{commonK}{a choice of method for selecting the common value for all observations from the values of \eqn{K} corresponding to all processes.
 }
 \item{minK}{a minimum value of \eqn{K}. When \code{basis = "Fourier"}, it has to be an odd number. If \code{minK = NULL}, we take \code{minK = 3}. For \code{basis = "b-spline"}, \code{minK} has to be greater than or equal to \code{norder} defined below. If \code{minK = NULL} or \code{minK < norder}, then we take \code{minK = norder}.
 }
@@ -73,6 +74,7 @@ fanova.tests(x = NULL, group.label, test = "ALL",
 \item{projection}{a method of generating Gaussian processes in step 1 of the tests based on random projections presented in Section 2 of the vignette file. If \code{projection = "GAUSS"}, the Gaussian white noise is generated as in the function \code{anova.RPm} from the R package \pkg{fda.usc}. In the second case, the Brownian motion is generated.}
 \item{permutation}{a logical indicating whether to compute p-values of the tests based on random projections by permutation method.}
 \item{B.TRP}{a number of permutation replicates for the tests based on random projections.}
+\item{independent.projection.tests}{a logical indicating whether to generate the random projections independently or dependently for different elements of vector \code{k}. In the first case, the random projections for each element of vector \code{k} are generated separately, while in the second one, they are generated as chained subsets, e.g., for \code{k = c(5, 10)}, the first 5 projections are a subset of the last 10. The second way of generating random projections is faster than the first one.}
 \item{parallel}{a logical indicating whether to use parallelization.}
 \item{nslaves}{if \code{parallel = TRUE}, a number of slaves. Its default value means that it will be equal to a number of logical processes of a computer used.
 }
@@ -104,7 +106,7 @@ A list with class "fanovatests" containing the following components (|\code{k}| 
 }
 \item{Fmaxb}{a list containing value of test statistic \code{statFmax}, p-value \code{pvalueFmaxb} and used parameter \code{paramFmaxb} for the Fmaxb test.
 }
-\item{TRP}{a list containing the following elements: vectors \code{pvalues.anova}, \code{pvalues.ATS}, \code{pvalues.WTPS} of length |\code{k}| containing p-values for tests based on random projections and for numbers of projections given in \code{k}; a list \code{data.projections} of length |\code{k}|, whose \eqn{i}th element is an \eqn{n\times} \code{k[i]} matrix with columns being projections of the data; used parameters for the tests based on random projections.
+\item{TRP}{a list containing the following elements: vectors \code{pvalues.anova}, \code{pvalues.ATS}, \code{pvalues.WTPS} of length |\code{k}| containing p-values for tests based on random projections and for numbers of projections given in \code{k}; if \code{independent.projection.tests = TRUE}, a list \code{data.projections} of length |\code{k}|, whose \eqn{i}th element is an \eqn{n\times} \code{k[i]} matrix with columns being projections of the data; when \code{independent.projection.tests = FALSE}, an \eqn{n\times \max}(\code{k}) matrix \code{data.projections} with columns being projections of the data; used parameters for the tests based on random projections.
 }
 and the values of other used parameters: \code{data = x}, \code{group.label}, etc.
 }
@@ -138,8 +140,9 @@ Zhang JT (2013). Analysis of Variance for Functional Data. Chapman & Hall, Londo
 Zhang JT, Chen JW (2007). Statistical Inferences for Functional Data. The Annals of
 Statistics 35, 1052-1079.
 
-Zhang JT, Cheng MY, Tseng CJ, Wu HT (2016). A New Test for One-Way ANOVA with
-Functional Data and Application to Ischemic Heart Screening. ArXiv:1309.7376v1.
+Zhang JT, Cheng MY, Wu HT, Zhou B (2018). A New Test for Functional One-way
+ANOVA with Applications to Ischemic Heart Screening. Computational Statistics and Data Analysis
+https://doi.org/10.1016/j.csda.2018.05.004
 
 Zhang JT, Liang X (2014). One-Way ANOVA for Functional Data via Globalizing the
 Pointwise F-Test. Scandinavian Journal of Statistics 41, 51-71.
@@ -181,7 +184,7 @@ fanova2 <- fanova.tests(x.gait, group.label.gait,
                         params = list(paramFP = list(int = c(0.025, 0.975),
                                                      B.FP = 1000, basis = "b-spline",
                                                      criterion = "eBIC",
-                                                     method = "mean",
+                                                     commonK = "mean",
                                                      minK = 5, maxK = 20,
                                                      norder = 4, gamma.eBIC = 0.7),
                                       paramFmaxb = 1000))
@@ -232,7 +235,7 @@ fanova2 <- fanova.tests(x.gait, group.label.gait,
                         params = list(paramFP = list(int = c(0.025, 0.975),
                                                      B.FP = 3, basis = "b-spline",
                                                      criterion = "eBIC",
-                                                     method = "mean",
+                                                     commonK = "mean",
                                                      minK = 5, maxK = 10,
                                                      norder = 4, gamma.eBIC = 0.7),
                                       paramFmaxb = 3))

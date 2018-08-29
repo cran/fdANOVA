@@ -44,7 +44,7 @@ fanova2 <- fanova.tests(x.gait, group.label.gait,
                         params = list(paramFP = list(int = c(0.025, 0.975),
                                                      B.FP = 3, basis = "b-spline",
                                                      criterion = "eBIC",
-                                                     method = "mean",
+                                                     commonK = "mean",
                                                      minK = 5, maxK = 20,
                                                      norder = 4, gamma.eBIC = 0.7),
                                       paramFmaxb = 3))

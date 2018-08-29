@@ -38,13 +38,13 @@ summary.fmanovaptbfr = function(object, ...){
       if(object$basis == "Fourier"){
         cat("Basis:", object$basis, "\n")
         cat("Criterion:", object$criterion, "\n")
-        cat("Method:", object$method, "\n")
+        cat("CommonK:", object$commonK, "\n")
         cat("Km =", object$Km, "KM =", object$KM, "maxK =", object$maxK, "\n")
       }
       if(object$basis == "b-spline"){
         cat("Basis:", object$basis, "(", "norder =", object$norder, ")", "\n")
         cat("Criterion:", object$criterion, "\n")
-        cat("Method:", object$method, "\n")
+        cat("CommonK:", object$commonK, "\n")
         cat("Km =", object$Km, "KM =", object$KM, "maxK =", object$maxK, "\n")
       }
     }else{
@@ -52,26 +52,26 @@ summary.fmanovaptbfr = function(object, ...){
         if(object$basis == "Fourier"){
           cat("Basis:", object$basis, "\n")
           cat("Criterion:", object$criterion, "(", "gamma.eBIC =", object$gamma.eBIC, ")", "\n")
-          cat("Method:", object$method, "\n")
+          cat("CommonK:", object$commonK, "\n")
           cat("Km =", object$Km, "KM =", object$KM, "minK =", object$minK, "maxK =", object$maxK, "\n")
         }
         if(object$basis == "b-spline"){
           cat("Basis:", object$basis, "(", "norder =", object$norder, ")", "\n")
           cat("Criterion:", object$criterion, "(", "gamma.eBIC =", object$gamma.eBIC, ")", "\n")
-          cat("Method:", object$method, "\n")
+          cat("CommonK:", object$commonK, "\n")
           cat("Km =", object$Km, "KM =", object$KM, "minK =", object$minK, "maxK =", object$maxK, "\n")
         }
       }else{
         if(object$basis == "Fourier"){
           cat("Basis:", object$basis, "\n")
           cat("Criterion:", object$criterion, "\n")
-          cat("Method:", object$method, "\n")
+          cat("CommonK:", object$commonK, "\n")
           cat("Km =", object$Km, "KM =", object$KM, "minK =", object$minK, "maxK =", object$maxK, "\n")
         }
         if(object$basis == "b-spline"){
           cat("Basis:", object$basis, "(", "norder =", object$norder, ")", "\n")
           cat("Criterion:", object$criterion, "\n")
-          cat("Method:", object$method, "\n")
+          cat("CommonK:", object$commonK, "\n")
           cat("Km =", object$Km, "KM =", object$KM, "minK =", object$minK, "maxK =", object$maxK, "\n")
         }
       }

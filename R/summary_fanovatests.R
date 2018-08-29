@@ -35,13 +35,13 @@ summary.fanovatests = function(object, ...){
         if(object$FP$basis == "Fourier"){
           cat("Basis:", object$FP$basis, "\n")
           cat("Criterion:", object$FP$criterion, "\n")
-          cat("Method:", object$FP$method, "\n")
+          cat("CommonK:", object$FP$commonK, "\n")
           cat("K =", object$FP$K, "maxK =", object$FP$maxK, "\n", "\n")
         }
         if(object$FP$basis == "b-spline"){
           cat("Basis:", object$FP$basis, "(", "norder =", object$FP$norder, ")", "\n")
           cat("Criterion:", object$FP$criterion, "\n")
-          cat("Method:", object$FP$method, "\n")
+          cat("CommonK:", object$FP$commonK, "\n")
           cat("K =", object$FP$K, "maxK =", object$FP$maxK, "\n", "\n")
         }
       }else{
@@ -49,26 +49,26 @@ summary.fanovatests = function(object, ...){
           if(object$FP$basis == "Fourier"){
             cat("Basis:", object$FP$basis, "\n")
             cat("Criterion:", object$FP$criterion, "(", "gamma.eBIC =", object$FP$gamma.eBIC, ")", "\n")
-            cat("Method:", object$FP$method, "\n")
+            cat("CommonK:", object$FP$commonK, "\n")
             cat("K =", object$FP$K, "minK =", object$FP$minK, "maxK =", object$FP$maxK, "\n", "\n")
           }
           if(object$FP$basis == "b-spline"){
             cat("Basis:", object$FP$basis, "(", "norder =", object$FP$norder, ")", "\n")
             cat("Criterion:", object$FP$criterion, "(", "gamma.eBIC =", object$FP$gamma.eBIC, ")", "\n")
-            cat("Method:", object$FP$method, "\n")
+            cat("CommonK:", object$FP$commonK, "\n")
             cat("K =", object$FP$K, "minK =", object$FP$minK, "maxK =", object$FP$maxK, "\n", "\n")
           }
         }else{
           if(object$FP$basis == "Fourier"){
             cat("Basis:", object$FP$basis, "\n")
             cat("Criterion:", object$FP$criterion, "\n")
-            cat("Method:", object$FP$method, "\n")
+            cat("CommonK:", object$FP$commonK, "\n")
             cat("K =", object$FP$K, "minK =", object$FP$minK, "maxK =", object$FP$maxK, "\n", "\n")
           }
           if(object$FP$basis == "b-spline"){
             cat("Basis:", object$FP$basis, "(", "norder =", object$FP$norder, ")", "\n")
             cat("Criterion:", object$FP$criterion, "\n")
-            cat("Method:", object$FP$method, "\n")
+            cat("CommonK:", object$FP$commonK, "\n")
             cat("K =", object$FP$K, "minK =", object$FP$minK, "maxK =", object$FP$maxK, "\n", "\n")
           }
         }
@@ -148,6 +148,13 @@ summary.fanovatests = function(object, ...){
       cat("For projections, the Gaussian white noise was generated.", "\n")
     }else{
       cat("For projections, the Brownian motion was generated.", "\n")
+    }
+    if (length(object$TRP$k) > 1) {
+      if (object$TRP$independent.projection.tests) {
+        cat("The random projections are generated independently for different elements of vector k.", "\n")
+      } else {
+        cat("The random projections are generated dependently for different elements of vector k.", "\n")
+      }
     }
   }
 }

@@ -18,7 +18,7 @@ fmanova.ptbfr(x = NULL, group.label, int, B = 1000,
               basis = c("Fourier", "b-spline", "own"),
               own.basis, own.cross.prod.mat,
               criterion = c("BIC", "eBIC", "AIC", "AICc", "NO"),
-              method = c("mode", "min", "max", "mean"),
+              commonK = c("mode", "min", "max", "mean"),
               minK = NULL, maxK = NULL, norder = 4, gamma.eBIC = 0.5)
 }
 \arguments{
@@ -42,7 +42,7 @@ fmanova.ptbfr(x = NULL, group.label, int, B = 1000,
 }
 \item{criterion}{a choice of information criterion for selecting the optimum value of \eqn{K_m}, \eqn{m=1,\dots,p}. \code{criterion = "NO"} means that \eqn{K_m} are equal to the parameter \code{maxK} defined below. Further remarks about this argument are the same as for the function \code{\link{fanova.tests}}.
 }
-\item{method}{a choice of method for selecting the common value for all observations from the values of \eqn{K_m} corresponding to all processes.
+\item{commonK}{a choice of method for selecting the common value for all observations from the values of \eqn{K_m} corresponding to all processes.
 }
 \item{minK}{a minimum value of \eqn{K_m}. Further remarks about this argument are the same as for the function \code{\link{fanova.tests}}.
 }
@@ -107,7 +107,7 @@ summary(fmanova1)
 # the tests based on a basis function representation with non-default parameters
 set.seed(123)
 fmanova2 <- fmanova.ptbfr(x.gait, group.label.gait, int = c(0.025, 0.975), B = 5000,
-                          basis = "b-spline", criterion = "eBIC", method = "mean",
+                          basis = "b-spline", criterion = "eBIC", commonK = "mean",
                           minK = 5, maxK = 20, norder = 4, gamma.eBIC = 0.7)
 summary(fmanova2)
 
@@ -141,7 +141,7 @@ summary(fmanova4)}
 \dontshow{
 # the tests based on a basis function representation with non-default parameters
 fmanova2 <- fmanova.ptbfr(x.gait, group.label.gait, int = c(0.025, 0.975), B = 5,
-                          basis = "b-spline", criterion = "eBIC", method = "mean",
+                          basis = "b-spline", criterion = "eBIC", commonK = "mean",
                           minK = 5, maxK = 20, norder = 4, gamma.eBIC = 0.7)
 
 # the tests based on a basis function representation

@@ -10,7 +10,7 @@
   \Shorttitle{\pkg{fdANOVA}: Analysis of Variance for Functional Data in \proglang{R}}
 
   \Abstract{
-Functional data, i.e., observations represented by curves or functions, frequently arise in various fields. The theory and practice of statistical methods for such data is referred to as functional data analysis (FDA) which is one of major research fields in statistics. The practical use of FDA methods is made possible thanks to availability of specialized and usually free software. In particular, a number of \proglang{R}~packages is devoted to these methods. In the vignette, we introduce a new \proglang{R}~package \pkg{fdANOVA} which provides an access to a broad range of global analysis of variance methods for univariate and multivariate functional data. The implemented testing procedures are briefly overviewed and illustrated by examples on a well known functional data set. To reduce the computation time, parallel implementation is developed.
+Functional data, i.e., observations represented by curves or functions, frequently arise in various fields. The theory and practice of statistical methods for such data is referred to as functional data analysis (FDA) which is one of major research fields in statistics. The practical use of FDA methods is made possible thanks to availability of specialized and usually free software. In particular, a number of \proglang{R}~packages is devoted to these methods. In the vignette, we introduce a new \proglang{R}~package \pkg{fdANOVA} which provides an access to a broad range of global analysis of variance methods for univariate and multivariate functional data. The implemented testing procedures mainly for homoscedastic case are briefly overviewed and illustrated by examples on a well known functional data set. To reduce the computation time, parallel implementation is developed.
 }
   \Keywords{analysis of variance, functional data, \pkg{fdANOVA}, \proglang{R}}
   \Plainkeywords{analysis of variance, functional data, fdANOVA, R} %% without formatting
@@ -49,7 +49,7 @@ ZhangLiang2014, GoreckiSmaga2015, Zhangetal2013}, canonical correlation analysis
 
 Many methods for functional data analysis have been already implemented in the \proglang{R}~software \citep{RCoreTeam2017}. The packages \pkg{fda} \citep{Ramsayetal2009,Ramsayetal2014} and \pkg{fda.usc} \citep{FBOF2012} are the biggest and probably the most commonly used ones. The first package includes the techniques for functional data in the Hilbert space $L_2(I)$ of square integrable functions over an interval $I=[a,b]$. On the other hand, in the second one, many of the methods implemented do not need such assumption and use only the values of functions evaluated on a grid of discretization points (also non-equally spaced). There is also a broad range of \proglang{R}~packages containing solutions for more particular functional data problems: Widely used principal components analysis for functional data implemented in the packages \pkg{fda} and \pkg{fda.usc} is also available in \pkg{fdapace} \citep{Daietal2016}, \pkg{fpca} \citep{PengPaul2011}, \pkg{fdasrvf} \citep{fdasrvf2017} and \pkg{MFPCA} \citep{MFPCA2017, HappGreven2016} ones. For classification and cluster analysis, the packages \pkg{classiFunc} \citep{classiFunc2017}, \pkg{fdakma} \citep{Parodietal2015}, \pkg{Funclustering} \citep{Soueidatt2014}, \pkg{funcy} \citep{Yassouridis2016} and \pkg{GPFDA} \citep{GPFDA2014} can be used. In the packages \pkg{fdaPDE} \citep{Lilaetal2016}, \pkg{FDboost} \citep{Brockhausetal2015, BrockhausRugamer2016}, \pkg{flars} \citep{flars2016}, \pkg{funreg} \citep{DziakShiyko2016} and \pkg{refund} \citep{Goldsmithetal2016}, a lot of work was done to develop the regression analysis for functional data. The packages \pkg{freqdom} \citep{freqdom2015}, \pkg{ftsa} \citep{Shang2013, HyndmanShang2016}, \pkg{ftsspec} \citep{Tavakoli2015} and  \pkg{pcdpca} \citep{Kidzinskietal2016} provide implementation of various methods of functional time series analysis. Methods for the robust analysis of univariate and multivariate functional data are provided in the \pkg{roahd} package \citep{roahd2017}. Interval testing procedures for functional data in different frameworks (i.e., one or two-population frameworks, functional linear models) are implemented in the \pkg{fdatest} package \citep{fdatest2015}. The functional data analysis in mixed model framework is implemented in the package \pkg{fdaMixed} \citep{Markussen2014}. The functional observations can be visualized by many of plots implemented in the following packages \pkg{GOplot} \citep{Walteretal2015}, \pkg{rainbow} \citep{ShangHyndman2016} and \pkg{refund.shiny} \citep{WrobelGoldsmith2016}. The packages \pkg{fds} \citep{ShangHyndman2013} and \pkg{mfds} \citep{GoreckiSmaga2017mfds} contain some interesting functional data sets.
 
-Despite so many \proglang{R}~packages for functional data analysis, a broad range of test for a widely applicable analysis of variance problem for functional data was implemented very recently in the package \pkg{fdANOVA}. Earlier, only the testing procedures of \cite{CFF2004} and \cite{CAFB2010} were available in the package \pkg{fda.usc}. The package \pkg{fdANOVA} is available from the Comprehensive \proglang{R}~Archive Network at \url{http://CRAN.R-project.org/package=fdANOVA}. It is the aim of this package to provide a few functions implementing most of known analysis of variance tests for univariate and multivariate functional data. Most of them are based on bootstrap, permutations or projections, which may be time-consuming. For this reason, the package also contains parallel implementations which enable to reduce the computation time significantly, which is shown in empirical evaluation.
+Despite so many \proglang{R}~packages for functional data analysis, a broad range of test for a widely applicable analysis of variance problem for functional data was implemented very recently in the package \pkg{fdANOVA}. Earlier, only the testing procedures of \cite{CFF2004} and \cite{CAFB2010} were available in the package \pkg{fda.usc}. The package \pkg{fdANOVA} is available from the Comprehensive \proglang{R}~Archive Network at \url{http://CRAN.R-project.org/package=fdANOVA}. It is the aim of this package to provide a few functions implementing most of known analysis of variance tests for univariate and multivariate functional data, mainly for homoscedastic case. Most of them are based on bootstrap, permutations or projections, which may be time-consuming. For this reason, the package also contains parallel implementations which enable to reduce the computation time significantly, which is shown in empirical evaluation.
 
 The rest of the vignette is organized in the following manner. In Section~\ref{sec2}, the problems of the analysis of variance for univariate and multivariate functional data are introduced. A review of most of the known solutions of these problems is also presented there. Some of the testing procedures are slightly generalized. Since it was not easy task to implement many different tests in a few functions, their usage may also be not easy at first. Thus, Section~\ref{sec3} contains a detailed description of (eventual) preparation of data and package functionality as well as a package demonstration on commonly used real data set.
 
@@ -110,7 +110,7 @@ for $i=1,\dots,l$, $j=1,\dots,n_{i}$, $r=1,\dots,k$.
 	 \item Compute the final $p$~value for $H_0$ by the formula $\inf\{kp_{(r)}/r,r=1,\dots,k\}$, where $p_{(1)}\leq\dots\leq p_{(k)}$ are the ordered $p$~values obtained in step 3.
 \end{enumerate}
 
-The tests based on the above procedure are referred to as the test based on random projections. \cite{CAFB2010} suggested to use $k$ near 30, which was confirmed by the results of \cite{GoreckiSmaga2017}. However, in the case of unconvincing results of the test, we should use a higher number of projections. We also have to choose a Gaussian distribution and ANOVA test appearing in steps 1 and 3 of the above procedure, respectively. We can do this in many ways and some of them are implemented in the package \pkg{fdANOVA} (see Section \ref{sec3}). In step 4, we can also use other final $p$~values instead of Benjamini and Hochberg procedure \citep{BenjaminiHochberg1995, BenjaminiYekutieli2001}, as for example Bonferroni correction. However, according to our experience, the test with corrected $p$~value given in step 4 behaves best under finite samples, so we use only it.
+The tests based on the above procedure are referred to as the test based on random projections. \cite{CAFB2010} suggested to use $k$ near 30, which was confirmed by the results of \cite{GoreckiSmaga2017}. However, in the case of unconvincing results of the test, we should use a higher number of projections. We also have to choose a Gaussian distribution and ANOVA test appearing in steps 1 and 3 of the above procedure, respectively. We can do this in many ways and some of them are implemented in the package \pkg{fdANOVA} (see Section \ref{sec3}). In step 4, we can also use other final $p$~values instead of Benjamini and Hochberg procedure \citep{BenjaminiHochberg1995, BenjaminiYekutieli2001}, as for example Bonferroni correction. However, according to our experience, the test with corrected $p$~value given in step 4 behaves best under finite samples, so we use only it. The procedure by Cuesta-Albertos and Febrero-Bande (2010) can also handle the heteroskedastic case. It only depends that such procedure exists for the projected data.
 
 \subsection{Multivariate case}
 \label{sec22}
@@ -198,7 +198,7 @@ which is controlled by the following parameters:
 
 \item \code{group.label} -- a vector containing group labels.
 
-\item \code{test} -- a kind of indicator which establishes a choice of FANOVA tests to be performed. Its default value means that all testing procedures of Section \ref{sec21} will be used. When we want to use only some tests, the parameter \code{test} is an appropriate subvector of the following vector of tests' labels:
+\item \code{test} -- a kind of indicator which establishes a choice of FANOVA tests to be performed. Its default value means that all testing procedures of Section \ref{sec21} will be used. When we want to use only some tests, the parameter \code{test} is an appropriate subvector of the following vector of tests' labels (see Section \ref{sec21}):
 \begin{Code}
 c("FP", "CH", "CS", "L2N", "L2B", "L2b", "FN", "FB", "Fb", "GPF",
   "Fmaxb", "TRP")
@@ -216,7 +216,7 @@ The list \code{params} can contain all or a part of the elements \code{paramFP},
 paramFP = list(int, B.FP = 1000, basis = c("Fourier", "b-spline", "own"),
                own.basis, own.cross.prod.mat,
                criterion = c("BIC", "eBIC", "AIC", "AICc", "NO"),
-               method = c("mode", "min", "max", "mean"),
+               commonK = c("mode", "min", "max", "mean"),
                minK = NULL, maxK = NULL, norder = 4, gamma.eBIC = 0.5)
 \end{Code}
 contains the parameters of the FP test and their default values, where:
@@ -234,7 +234,7 @@ contains the parameters of the FP test and their default values, where:
 \item \code{criterion} -- a choice of information criterion for selecting the optimum value of $K$. \code{criterion = "NO"} means that $K$ is equal to the parameter \code{maxK} defined below. By (\ref{Xbfr}), we have
 $\text{\code{BIC}}(X_{ij})=\mathcal{T}\log(\mathbf{e}_{ij}^{\top}\mathbf{e}_{ij}/\mathcal{T})+K\log\mathcal{T}$, $\text{\code{eBIC}}(X_{ij})=\mathcal{T}\log(\mathbf{e}_{ij}^{\top}\mathbf{e}_{ij}/\mathcal{T})+K[\log\mathcal{T}+2\gamma\log(K_{\max})]$, $\text{\code{AIC}}(X_{ij})=\mathcal{T}\log(\mathbf{e}_{ij}^{\top}\mathbf{e}_{ij}/\mathcal{T})+2K$ and $\text{\code{AICc}}(X_{ij})=\text{\code{AIC}}(X_{ij})+2K(K + 1)/(n-K-1)$, where $\mathbf{e}_{ij}=(e_{ij1},\dots,e_{ij\mathcal{T}})^{\top}$, $e_{ijr}=X_{ij}(t_r)-\sum_{m=1}^K\hat{c}_{ijm}\varphi_m(t_r)$, $t_1,\dots,t_{\mathcal{T}}$ are the design time points, $\gamma\in[0,1]$, $K_{\max}$ is a maximum $K$ considered and $\log$ denotes the natural logarithm.
 
-\item \code{method} -- a choice of method for selecting the common value for all observations from the values of $K$ corresponding to all processes.
+\item \code{commonK} -- a choice of method for selecting the common value for all observations from the values of $K$ corresponding to all processes.
 
 \item \code{minK} (resp. \code{maxK}) -- a minimum (resp. maximum) value of $K$. When \code{basis = "Fourier"}, they have to be odd numbers. If $\text{\code{minK}}=\text{\code{NULL}}$ and $\text{\code{maxK}}=\text{\code{NULL}}$, we take $\text{\code{minK}}=3$ and \code{maxK} equal to the largest odd number smaller than the number of design time points. If \code{maxK} is greater than or equal to the number of design time points, \code{maxK} is taken as above. For \code{basis = "b-spline"}, \code{minK} (resp. \code{maxK}) has to be greater (resp. smaller) than or equal to \code{norder} defined below (resp. $\mathcal{T}$). If $\text{\code{minK}}=\text{\code{NULL}}$ or $\text{\code{minK}}<\text{\code{norder}}$ and $\text{\code{maxK}}=\text{\code{NULL}}$ or $\text{\code{maxK}}>\mathcal{T}$, then we take $\text{\code{minK}}=\text{\code{norder}}$ and $\text{\code{maxK}}=\mathcal{T}$.
 
@@ -248,7 +248,8 @@ It should be noted that the AICc may choose the finale model with a number $K$ o
 For the CH and CS (resp. L$^2$b, Fb and Fmaxb) tests, the parameters \code{paramCH} and \code{paramCS} (resp. \code{paramL2b}, \code{paramFb} and \code{paramFmaxb}) denote the numbers of discretized artificial trajectories for certain Gaussian processes (resp. bootstrap samples) used to approximate the null distributions of their test statistics. The default value of each of these parameters is 10,000. The parameters of the test based on random projections and their default values are contained in a list
 \begin{Code}
 paramTRP = list(k = 30, projection = c("GAUSS", "BM"),
-                permutation = FALSE, B.TRP = 10000)
+                permutation = FALSE, B.TRP = 10000,
+                independent.projection.tests = TRUE)
 \end{Code}
 where:
 \begin{itemize}
@@ -259,11 +260,15 @@ where:
 \item \code{permutation} -- a logical indicating whether to compute $p$~values by permutation method.
 
 \item \code{B.TRP} -- a number of permutation replicates.
+
+\item \code{independent.projection.tests} -- a logical indicating whether to generate the random projections independently or dependently for different elements of vector \code{k}. In the first case, the random projections for each element of vector \code{k} are generated separately, while in the second one, they are generated as chained subsets, e.g., for \code{k = c(5, 10)}, the first 5 projections are a subset of the last 10. The second way of generating random projections is faster than the first one.
 \end{itemize}
+
+A Brownian process in $[a,b]$ has small variances near $a$ and higher variances close to $b$. This means that the tests based on random projections and the Brownian motion may be more able to detect differences among mean groups, when those differences are much closer to $b$ than to $a$.
 
 To perform step 3 of the procedure based on random projections given in Section \ref{sec21}, in the package, we use five testing procedures: the standard (\code{paramTRP$permutation = FALSE}) and permutation (\code{paramTRP$permutation = TRUE}) tests based on ANOVA F~test statistic and ANOVA-type statistic (ATS) proposed by \cite{Brunneretal1997}, as well as the testing procedure based on Wald-type permutation statistic (WTPS) of \cite{Paulyetal2015}.
 
-The function \code{fanova.tests()} returns a list of the class \code{fanovatests}. This list contains the values of the test statistics, the $p$~values and the parameters used. The results for a given test are given in a list (being an element of output list) named the same as the indicator of a test in the vector \code{test}. Additional outputs as the chosen optimal length of basis expansion (the FP test), the values of estimators used in approximations of null distributions of test statistics (the L$^2$N, L$^2$B, FN, FB, GPF tests) and projections of the data (the test based on random projections) are contained in appropriate lists. The projections of the data are contained in a list of the length equal to length of vector \code{k}, whose $i$-th element is an $n\times \text{\code{k[i]}}$ matrix with columns being projections of the data.
+The function \code{fanova.tests()} returns a list of the class \code{fanovatests}. This list contains the values of the test statistics, the $p$~values and the parameters used. The results for a given test are given in a list (being an element of output list) named the same as the indicator of a test in the vector \code{test}. Additional outputs as the chosen optimal length of basis expansion (the FP test), the values of estimators used in approximations of null distributions of test statistics (the L$^2$N, L$^2$B, FN, FB, GPF tests) and projections of the data (the test based on random projections) are contained in appropriate lists. If \code{independent.projection.tests = TRUE}, the projections of the data are contained in a list of the length equal to length of vector \code{k}, whose $i$-th element is an $n\times \text{\code{k[i]}}$ matrix with columns being projections of the data. When \code{independent.projection.tests = FALSE}, the projections of the data are contained in an $n\times \max(\text{\code{k}})$ matrix with columns being projections of the data.
 
 The permutation tests based on a basis function representation for FMANOVA problem, i.e., the W, LH, P and R tests are implemented in the function \code{fmanova.ptbfr()}:
 \begin{CodeChunk}
@@ -277,7 +282,7 @@ function(x = NULL, group.label, int, B = 1000,
          basis = c("Fourier", "b-spline", "own"),
          own.basis, own.cross.prod.mat,
          criterion = c("BIC", "eBIC", "AIC", "AICc", "NO"),
-         method = c("mode", "min", "max", "mean"),
+         commonK = c("mode", "min", "max", "mean"),
          minK = NULL, maxK = NULL, norder = 4, gamma.eBIC = 0.5)
 \end{CodeOutput}
 \end{CodeChunk}
@@ -291,7 +296,7 @@ The parameters \code{group.label}, \code{int}, \code{B}, \code{parallel}, \code{
 
 \item \code{criterion} -- a choice of information criterion for selecting the optimum value of $K_m$, $m=1,\dots,p$. \code{criterion = "NO"} means that $K_m$ are equal to the parameter \code{maxK} defined below.
 
-\item \code{method} -- a choice of method for selecting the common value for all observations from the values of $K_{m}$ corresponding to all processes.
+\item \code{commonK} -- a choice of method for selecting the common value for all observations from the values of $K_{m}$ corresponding to all processes.
 
 \item \code{minK} (resp. \code{maxK}) -- a minimum (resp. maximum) value of $K_m$. Further remarks about these arguments are the same as for the function \code{fanova.tests()}.
 \end{itemize}
@@ -307,10 +312,11 @@ R> str(fmanova.trp)
 \begin{CodeOutput}
 function(x, group.label, k = 30, projection = c("GAUSS", "BM"),
          permutation = FALSE, B = 1000,
+         independent.projection.tests = TRUE,
          parallel = FALSE, nslaves = NULL)
 \end{CodeOutput}
 \end{CodeChunk}
-The first two parameters of this function as well as the arguments \code{parallel}, \code{nslaves} are the same as in the function \code{fmanova.ptbfr()}. The other ones have the same meaning as in the parameter list \code{paramTRP} of the function \code{fanova.tests()} (\code{B} corresponds to \code{B.TRP}). The function \code{fmanova.trp()} returns a list of class \code{fmanovatrp} containing the parameters and the following elements ($|\text{\code{k}}|$ denotes the length of vector \code{k}): \code{pvalues} -- a $4\times |\text{\code{k}}|$ matrix of $p$~values of the tests; \code{data.projections} -- a list of length $|\text{\code{k}}|$, whose elements are lists of $n\times p$ matrices of projections of the observations.
+The first two parameters of this function as well as the arguments \code{parallel}, \code{nslaves} are the same as in the function \code{fmanova.ptbfr()}. The other ones have the same meaning as in the parameter list \code{paramTRP} of the function \code{fanova.tests()} (\code{B} corresponds to \code{B.TRP}). The function \code{fmanova.trp()} returns a list of class \code{fmanovatrp} containing the parameters and the following elements ($|\text{\code{k}}|$ denotes the length of vector \code{k}): \code{pvalues} -- a $4\times |\text{\code{k}}|$ matrix of $p$~values of the tests; \code{data.projections} -- if \code{independent.projection.tests = TRUE}, a list of length $|\text{\code{k}}|$, whose elements are lists of $n\times p$ matrices of projections of the observations, while when \code{independent.projection.tests = FALSE}, a list of length $\max(\text{\code{k}})$, whose elements are $n\times p$ matrices of projections of the observations.
 
 The executions of selecting the optimum length of basis expansion by some information criterion, the bootstrap, permutation and projection  loops are the most time consuming steps of the testing procedures under consideration. To reduce the computational cost of the procedures, they are parallelized, when the parameter \code{parallel} is set to \code{TRUE}. The parallel execution is handled by \pkg{doParallel} package \citep{RASW2015}.
 
@@ -526,7 +532,7 @@ The above examples concern only the first functional feature of the \textit{gait
 R> set.seed(123)
 R> fmanova <- fmanova.ptbfr(x.gait, group.label.gait, int = c(0.025, 0.975),
 +                           B = 5000, basis = "b-spline", criterion = "eBIC",
-+                           method = "mean", minK = 5, maxK = 20, norder = 4,
++                           commonK = "mean", minK = 5, maxK = 20, norder = 4,
 +                           gamma.eBIC = 0.7)
 R> summary(fmanova)
 \end{CodeInput}
@@ -555,11 +561,11 @@ R  = 0.08565056  p-value = 0.3852
 Number of permutations = 5000
 Basis: b-spline (norder = 4)
 Criterion: eBIC (gamma.eBIC = 0.7)
-Method: mean
+CommonK: mean
 Km = 20 20 KM = 20 minK = 5 maxK = 20
 \end{CodeOutput}
 \end{CodeChunk}
-Finally, we apply the tests based on random projections for the FMANOVA problem in the \textit{gait} data set. In the following, these tests are performed with $k=1,5,10,15,20$ projections as well as standard and permutation methods. The resulting $p$~values are visualized by the \code{plot.fmanovatrp()} function:
+Finally, we apply the tests based on random projections for the FMANOVA problem in the \textit{gait} data set. In the following, these tests are performed with $k=1,5,10,15,20$ projections, standard and permutation methods as well as the random projections generated in independent and dependent ways. The resulting $p$~values are visualized by the \code{plot.fmanovatrp()} function:
 \begin{CodeChunk}
 \begin{CodeInput}
 R> set.seed(123)
@@ -568,13 +574,21 @@ R> fmanova2 <- fmanova.trp(x.gait, group.label.gait, k = c(1, 5, 10, 15, 20),
 +                          permutation = TRUE)
 R> plot(x = fmanova1, y = fmanova2)
 R> plot(x = fmanova1, y = fmanova2, withoutRoy = TRUE)
+R> set.seed(123)
+R> fmanova3 <- fmanova.trp(x.gait, group.label.gait, k = c(1, 5, 10, 15, 20),
++                          independent.projection.tests = FALSE)
+R> fmanova4 <- fmanova.trp(x.gait, group.label.gait, k = c(1, 5, 10, 15, 20),
++                          permutation = TRUE,
++                          independent.projection.tests = FALSE)
+R> plot(x = fmanova3, y = fmanova4)
+R> plot(x = fmanova3, y = fmanova4, withoutRoy = TRUE)
 \end{CodeInput}
 \end{CodeChunk}
 
 \begin{figure}[!t]
 \includegraphics[width=0.99\textwidth,
-height=0.45\textwidth]{Fig2.pdf}
-		\caption{P~values of the tests based on random projections for the FMANOVA problem in the \textit{gait} data set. The Wpp, LHpp, Ppp and Rpp tests are the permutation versions of the Wp, LHp, Pp and Rp tests.}
+height=0.55\textwidth]{Fig2.pdf}
+		\caption{P~values of the tests based on random projections for the FMANOVA problem in the \textit{gait} data set. The Wpp, LHpp, Ppp and Rpp tests are the permutation versions of the Wp, LHp, Pp and Rp tests. In the first (resp. second) row, the random projections were generated in independent (resp. dependent) way.}
 		\label{Fig2}
 \end{figure}
 
