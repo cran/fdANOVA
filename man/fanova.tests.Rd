@@ -185,7 +185,7 @@ fanova2 <- fanova.tests(x.gait, group.label.gait,
                                                      B.FP = 1000, basis = "b-spline",
                                                      criterion = "eBIC",
                                                      commonK = "mean",
-                                                     minK = 5, maxK = 20,
+                                                     minK = 5, maxK = 19,
                                                      norder = 4, gamma.eBIC = 0.7),
                                       paramFmaxb = 1000))
 summary(fanova2)

@@ -108,7 +108,7 @@ summary(fmanova1)
 set.seed(123)
 fmanova2 <- fmanova.ptbfr(x.gait, group.label.gait, int = c(0.025, 0.975), B = 5000,
                           basis = "b-spline", criterion = "eBIC", commonK = "mean",
-                          minK = 5, maxK = 20, norder = 4, gamma.eBIC = 0.7)
+                          minK = 5, maxK = 19, norder = 4, gamma.eBIC = 0.7)
 summary(fmanova2)
 
 # the tests based on a basis function representation
@@ -127,7 +127,7 @@ fmanova3 <- fmanova.ptbfr(group.label = group.label.gait,
 summary(fmanova3)
 
 library(fda)
-fbasis <- create.bspline.basis(c(0, nrow(x.gait[[1]])), 20, norder = 4)
+fbasis <- create.bspline.basis(c(0, nrow(x.gait[[1]])), 19, norder = 4)
 own.basis <- vector("list", 2)
 own.basis[[1]] <- Data2fd(1:nrow(x.gait[[1]]), x.gait[[1]], fbasis)$coefs
 own.basis[[2]] <- Data2fd(1:nrow(x.gait[[2]]), x.gait[[2]], fbasis)$coefs
@@ -142,7 +142,7 @@ summary(fmanova4)}
 # the tests based on a basis function representation with non-default parameters
 fmanova2 <- fmanova.ptbfr(x.gait, group.label.gait, int = c(0.025, 0.975), B = 5,
                           basis = "b-spline", criterion = "eBIC", commonK = "mean",
-                          minK = 5, maxK = 20, norder = 4, gamma.eBIC = 0.7)
+                          minK = 5, maxK = 19, norder = 4, gamma.eBIC = 0.7)
 
 # the tests based on a basis function representation
 # with predefined basis function representation
@@ -156,7 +156,7 @@ fmanova3 <- fmanova.ptbfr(group.label = group.label.gait,
                           own.basis = own.basis,
                           own.cross.prod.mat = own.cross.prod.mat)
 
-fbasis <- create.bspline.basis(c(0, nrow(x.gait[[1]])), 20, norder = 4)
+fbasis <- create.bspline.basis(c(0, nrow(x.gait[[1]])), 19, norder = 4)
 own.basis <- vector("list", 2)
 own.basis[[1]] <- Data2fd(1:nrow(x.gait[[1]]), x.gait[[1]], fbasis)$coefs
 own.basis[[2]] <- Data2fd(1:nrow(x.gait[[2]]), x.gait[[2]], fbasis)$coefs

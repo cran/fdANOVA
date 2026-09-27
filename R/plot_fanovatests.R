@@ -5,7 +5,7 @@ plot.fanovatests = function(x, y, ...){
     stop("Please install package 'ggplot2'")
   }
   if(missing(y)){
-    if(class(x) != "fanovatests"){ stop("argument x is not of fanovatests class") }
+    if (!inherits(x, "fanovatests")) { stop("argument x is not of fanovatests class") }
     if(is.null(x$TRP)){ stop("the (standard) tests based on random projections were not performed") }
     pvalues = c(x$TRP$pvalues.anova, x$TRP$pvalues.ATS, x$TRP$pvalues.WTPS)
     da = data.frame(pvalues = pvalues, k = rep(x$TRP$k, 3),
@@ -16,7 +16,7 @@ plot.fanovatests = function(x, y, ...){
       ggplot2::scale_color_manual(values = c(1, 3, 6)) +
       ggplot2::labs(title = "FANOVA - Tests based on k Random Projections (ANOVA and ATS without permutation)")
   }else{
-    if(class(y) != "fanovatests"){ stop("argument y is not of fanovatests class") }
+    if (!inherits(y, "fanovatests")) { stop("argument y is not of fanovatests class") }
     if(is.null(y$TRP)){ stop("the (permutation) tests based on random projections were not performed") }
     if(missing(x)){
       pvalues = c(y$TRP$pvalues.anova, y$TRP$pvalues.ATS, y$TRP$pvalues.WTPS)
@@ -28,7 +28,7 @@ plot.fanovatests = function(x, y, ...){
         ggplot2::scale_color_manual(values = c(2, 4, 6)) +
         ggplot2::labs(title = "FANOVA - Tests based on k Random Projections (using permutations)")
     }else{
-      if(class(x) != "fanovatests"){ stop("argument x is not of fanovatests class") }
+      if (!inherits(x, "fanovatests")) { stop("argument x is not of fanovatests class") }
       if(is.null(x$TRP)){ stop("the (standard) tests based on random projections were not performed") }
       if(any(x$TRP$k != y$TRP$k)){ stop("numbers of projections must be the same for standard and permutation tests") }
       pvalues.stand = c(x$TRP$pvalues.anova, x$TRP$pvalues.ATS, x$TRP$pvalues.WTPS)

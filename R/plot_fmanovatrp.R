@@ -6,7 +6,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
   }
   if(! is.logical(withoutRoy)){ stop("argument withoutRoy is not logical") }
   if(missing(y)){
-    if(class(x) != "fmanovatrp"){ stop("argument x is not of fmanovatrp class") }
+    if (!inherits(x, "fmanovatrp")) { stop("argument x is not of fmanovatrp class") }
     if(withoutRoy == FALSE){
       pvalues = c()
       for(ii in 1:4){ pvalues = c(pvalues, (x$pvalues)[ii, ]) }
@@ -29,7 +29,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
         ggplot2::labs(title = "FMANOVA - Tests based on k Random Projections (without permutation)")
     }
   }else{
-    if(class(y) != "fmanovatrp"){ stop("argument y is not of fmanovatrp class") }
+    if (!inherits(y, "fmanovatrp")) { stop("argument y is not of fmanovatrp class") }
     if(missing(x)){
       pvalues = c()
       for(ii in 1:4){ pvalues = c(pvalues, (y$pvalues)[ii, ]) }
@@ -41,7 +41,7 @@ plot.fmanovatrp = function(x, y, withoutRoy = FALSE, ...){
         ggplot2::scale_color_manual(values = c(2, 4, 5, 8)) +
         ggplot2::labs(title = "FMANOVA - Tests based on k Random Projections (using permutations)")
     }else{
-      if(class(x) != "fmanovatrp"){ stop("argument x is not of fmanovatrp class") }
+      if (!inherits(x, "fmanovatrp")) { stop("argument x is not of fmanovatrp class") }
       if(any(x$k != y$k)){ stop("numbers of projections must be the same for standard and permutation tests") }
       if(withoutRoy == FALSE){
         pvalues.stand = c(); pvalues.perm = c()
